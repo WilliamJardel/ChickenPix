@@ -1,0 +1,3 @@
+Esse pacote é utilizada para mapear as tabelas do banco de dados.
+Ou seja uma classe "Produto.java", ficaria no pacote "model".
+Dentro dela haveria a definição exata da tabela "tb_produto" no banco de dados.
