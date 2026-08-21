@@ -1,0 +1,7 @@
+Guarda as regras de negócio, validações de domonio e administração do fluxo de dados.
+Gerencia transações de banco de dados e lança exceções de negócio
+
+EX.:
+A classe "ProdutoService.java" recebe o "ProdutoRequestDTO".
+Verifica se ja existe outro produto cadastrado com o mesmo nome,
+aplica a regra de desconto e envia o objeto processado para "ProdutoRepository.save()"
