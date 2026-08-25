@@ -24,7 +24,7 @@ public class ChaveCpf implements ChavePix {
         return validaCpf();
     }
 
-    public boolean validaEmail(){
+    public boolean validaCpf(){
         String regexCPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
         return this.chave != null && this.chave.matches(regexCPF);
     }
