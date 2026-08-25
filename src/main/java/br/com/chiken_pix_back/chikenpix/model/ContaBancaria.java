@@ -32,8 +32,12 @@ public class ContaBancaria {
         this.chavesPix.put(tipoChave, chave);
     }
 
+    public ChavePix buscarChavePix(TipoChavePix tipoChave){
+        return chavesPix.get(tipoChave);
+    }
+
     public ChavePix rmChavePix(TipoChavePix tipoChave){
-        ChavePix rmChave = chavesPix.get(tipoChave);
+        ChavePix rmChave = buscarChavePix(tipoChave);
         this.chavesPix.remove(tipoChave);
         return rmChave;
     }
