@@ -1,14 +1,15 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import lombok.Getter;
 import java.util.HashMap;
 
 public class ContaBancaria {
 
-    private final String numeroConta;
-    private final String numeroAgencia;
-    private final String codigoBanco;
-    private final String nomeBanco;
-    private double saldo;
+    private @Getter final String numeroConta;
+    private @Getter final String numeroAgencia;
+    private @Getter final String codigoBanco;
+    private @Getter final String nomeBanco;
+    private @Getter double saldo;
     private final HashMap<TipoChavePix, ChavePix> chavesPix;
 
     public ContaBancaria(String numeroConta){
@@ -40,5 +41,16 @@ public class ContaBancaria {
         ChavePix rmChave = buscarChavePix(tipoChave);
         this.chavesPix.remove(tipoChave);
         return rmChave;
+    }
+
+    public boolean realizarPix(TipoChavePix destino, double value){
+        if(buscarChavePix(destino) == null) {
+            return false;
+        }
+        if(value <= 0.00) {
+            return false;
+        }
+        creditar(value);
+        return true;
     }
 }
