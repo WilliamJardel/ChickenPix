@@ -1,4 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
+import br.com.caelum.stella.validation.CNPJValidator;
+
 
 public class ChaveCnpj implements ChavePix {
     private String chave;
