@@ -1,6 +1,8 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
+import br.com.chiken_pix_back.chikenpix.exception.ValorInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import lombok.Getter;
 import java.util.HashMap;
 
@@ -44,14 +46,16 @@ public class ContaBancaria {
         return rmChave;
     }
 
-    public boolean realizarPix(TipoChavePix destino, double value) throws ChaveNaoEncontradaException {
+    public boolean realizarPix(TipoChavePix destino, double value) throws ChaveNaoEncontradaException, ValorPixInvalidoException {
         if(buscarChavePix(destino) == null) {
             throw new ChaveNaoEncontradaException(
                 "Chave Pix não encontrada."
             );
         }
         if(value <= 0.00) {
-            return false;
+            throw new ValorPixInvalidoException(
+                    "Valor inválido inserido."
+            );
         }
         creditar(value);
         return true;

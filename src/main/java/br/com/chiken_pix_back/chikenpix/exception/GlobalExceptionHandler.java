@@ -15,4 +15,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ValorPixInvalidoException.class)
+    public ResponseEntity<String> tratarValorPixInvalido(ValorPixInvalidoException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }
