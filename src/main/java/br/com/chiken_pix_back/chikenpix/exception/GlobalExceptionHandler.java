@@ -22,4 +22,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    public ResponseEntity<String> tratarChavePixJaCadastrada(ChavePixJaCadastradaException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }

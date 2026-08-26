@@ -1,7 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
-import br.com.chiken_pix_back.chikenpix.exception.ValorInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import lombok.Getter;
 import java.util.HashMap;
@@ -32,7 +32,12 @@ public class ContaBancaria {
         this.saldo += valor;
     }
 
-    public void addChavePix(TipoChavePix tipoChave, ChavePix chave){
+    public void addChavePix(TipoChavePix tipoChave, ChavePix chave) throws ChavePixJaCadastradaException {
+        if (buscarChavePix(tipoChave) != null){
+            throw new ChavePixJaCadastradaException(
+              "Chave Pix já cadastrada."
+            );
+        }
         this.chavesPix.put(tipoChave, chave);
     }
 
@@ -40,8 +45,14 @@ public class ContaBancaria {
         return chavesPix.get(tipoChave);
     }
 
-    public ChavePix rmChavePix(TipoChavePix tipoChave){
+    public ChavePix rmChavePix(TipoChavePix tipoChave) throws ChaveNaoEncontradaException{
         ChavePix rmChave = buscarChavePix(tipoChave);
+        if(rmChave == null) {
+            throw new ChaveNaoEncontradaException(
+                    "Chave Pix não encontrada."
+            );
+        }
+
         this.chavesPix.remove(tipoChave);
         return rmChave;
     }
