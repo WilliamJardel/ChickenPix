@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import lombok.Getter;
 import java.util.HashMap;
 
@@ -43,9 +44,11 @@ public class ContaBancaria {
         return rmChave;
     }
 
-    public boolean realizarPix(TipoChavePix destino, double value){
+    public boolean realizarPix(TipoChavePix destino, double value) throws ChaveNaoEncontradaException {
         if(buscarChavePix(destino) == null) {
-            return false;
+            throw new ChaveNaoEncontradaException(
+                "Chave Pix não encontrada."
+            );
         }
         if(value <= 0.00) {
             return false;
