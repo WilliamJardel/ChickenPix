@@ -7,22 +7,13 @@ import java.time.LocalDateTime;
 
 public class Transacao {
 
-    @Getter
-    private String id;
-    @Setter
-    @Getter
-    private double valor;
-    @Getter
-    private TipoTransacao tipo;
-    @Getter
-    private LocalDateTime dateTime;
-    @Setter
-    @Getter
-    private StatusTransacao status;
-    @Getter
-    private ContaBancaria origem;
-    @Getter
-    private ContaBancaria destino;
+    private @Getter String id;
+    @Getter @Setter private double valor;
+    private @Getter TipoTransacao tipo;
+    private @Getter LocalDateTime dateTime;
+    @Getter @Setter private StatusTransacao status;
+    private @Getter ContaBancaria origem;
+    private @Getter ContaBancaria destino;
 
     public Transacao(double valor, ContaBancaria origem, ContaBancaria destino, TipoTransacao tipo){
         this.id = UUID.randomUUID().toString();
