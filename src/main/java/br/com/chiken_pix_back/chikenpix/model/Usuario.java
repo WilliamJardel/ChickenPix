@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.caelum.stella.tinytype.CPF;
+import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
@@ -44,6 +46,12 @@ public class Usuario {
     public static void validarNome(String nome) throws NomeInvalidoException{
         if(nome == null || nome.isBlank() || !nome.trim().matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\\\s]{3,100}$")) {
             throw new NomeInvalidoException("Nome Inválido");
+        }
+    }
+
+    public static void validarCPF(String cpf) throws CPFInvalidoException{
+        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\\\d{11}|\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2})$")) {
+            throw new CPFInvalidoException("Nome Inválido");
         }
     }
 }
