@@ -18,4 +18,18 @@ public class ChaveAleatoria implements ChavePix{
     public TipoChavePix getTipoChave() {
         return TipoChavePix.ALEATORIA;
     }
+
+    @Override
+    public boolean validar() {
+        return validarUUID();
+    }
+
+    private boolean validarUUID(){
+        try {
+            UUID.fromString(chave);
+            return true;
+        } catch (IllegalArgumentException e){
+            return false;
+        }
+    }
 }
