@@ -31,28 +31,28 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    @ExceptionHandler(SenhaInvalidaException.class)
     public ResponseEntity<String> tratarSenhaInvalida(SenhaInvalidaException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    @ExceptionHandler(EmailInvalidoException.class)
     public ResponseEntity<String> tratarEmailInvalido(EmailInvalidoException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    @ExceptionHandler(NomeInvalidoException.class)
     public ResponseEntity<String> tratarNomeInvalido(NomeInvalidoException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    @ExceptionHandler(CPFInvalidoException.class)
     public ResponseEntity<String> tratarCPFInvalido(CPFInvalidoException exception) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
