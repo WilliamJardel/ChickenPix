@@ -24,7 +24,7 @@ public class ChaveEmail implements ChavePix {
         return validaEmail();
     }
 
-    public boolean validaEmail(){
+    private boolean validaEmail(){
         if (this.chave == null || this.chave.isBlank()) {
             return false;
         }
