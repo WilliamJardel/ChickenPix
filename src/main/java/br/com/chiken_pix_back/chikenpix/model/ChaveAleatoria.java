@@ -6,6 +6,7 @@ public class ChaveAleatoria implements ChavePix{
     private String chave;
 
     public ChaveAleatoria(){
+        this.chave = UUID.randomUUID().toString();
     }
 
     @Override
