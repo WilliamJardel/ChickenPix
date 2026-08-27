@@ -43,4 +43,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    public ResponseEntity<String> tratarNomeInvalido(NomeInvalidoException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }

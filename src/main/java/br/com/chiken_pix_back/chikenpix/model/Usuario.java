@@ -1,6 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 
 import lombok.Getter;
@@ -37,6 +38,12 @@ public class Usuario {
     public static void validarEmail(String email) throws EmailInvalidoException {
         if(email == null || email.isBlank() || !email.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new EmailInvalidoException("email Inválido");
+        }
+    }
+
+    public static void validarNome(String nome) throws NomeInvalidoException{
+        if(nome == null || nome.isBlank() || !nome.trim().matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\\\s]{3,100}$")) {
+            throw new NomeInvalidoException("Nome Inválido");
         }
     }
 }
