@@ -29,4 +29,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ChavePixJaCadastradaException.class)
+    public ResponseEntity<String> tratarSenhaInvalida(SenhaInvalidaException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }
