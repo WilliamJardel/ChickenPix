@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Usuario {
 
     }
 
+
     public static void validarSenha(String valor) throws SenhaInvalidaException {
         if (valor == null || valor.isBlank() || !valor.trim().matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$")){
                 throw new SenhaInvalidaException("Senha Inválida");
@@ -32,5 +34,9 @@ public class Usuario {
         //depois eu uso a trim() pra retirar qualquer espaço que o usuário digite "sem querer" e uso p matches() para estabelecer o padrão da ssenha a ser definida
         // que é ter pelo menos uma legtra maiuscula, uma minuscula, um numero e um caractere especial e deve ter no minimo 8 caractes.
     }
-
+    public static void validarEmail(String email) throws EmailInvalidoException {
+        if(email == null || email.isBlank() || !email.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new EmailInvalidoException("email Inválido");
+        }
+    }
 }
