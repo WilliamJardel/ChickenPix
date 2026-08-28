@@ -57,18 +57,4 @@ public class ContaBancaria {
         return rmChave;
     }
 
-    public boolean realizarPix(TipoChavePix destino, double value) throws ChaveNaoEncontradaException, ValorPixInvalidoException{
-        if(buscarChavePix(destino) == null) {
-            throw new ChaveNaoEncontradaException(
-                "Chave Pix não encontrada."
-            );
-        }
-        if(value <= 0.00) {
-            throw new ValorPixInvalidoException(
-                    "Valor inválido inserido."
-            );
-        }
-        creditar(value);
-        return true;
-    }
 }
