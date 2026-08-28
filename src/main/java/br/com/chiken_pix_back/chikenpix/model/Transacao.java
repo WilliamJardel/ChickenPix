@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class Transacao {
 
     private @Getter String id;
-    @Getter @Setter private double valor;
+    @Getter private double valor;
     private @Getter TipoTransacao tipo;
     private @Getter LocalDateTime dateTime;
     @Getter @Setter private StatusTransacao status;
