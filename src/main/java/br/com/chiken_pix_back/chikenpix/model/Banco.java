@@ -1,6 +1,8 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
+import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 
 import java.util.HashMap;
 
@@ -49,5 +51,4 @@ public class Banco {
             throw new IdNaoEncontradoException("Usuario não encontrado");
         }
     }
-
 }
