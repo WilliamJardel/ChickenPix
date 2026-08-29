@@ -1,6 +1,8 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
+import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 
 import java.util.HashMap;
 
@@ -23,16 +25,14 @@ public class Banco {
         return usuarios.remove(id);
     }
 
-    public ContaBancaria buscarConta(String chave) {
+    public ContaBancaria buscarConta(TipoChavePix tipoChave, String chaveDestino) {
         for (Usuario usuario: usuarios.values()) {
             ContaBancaria conta = usuario.getConta();
 
-            for (TipoChavePix tipoChavePix : TipoChavePix.values()) {
-                ChavePix chavePix = conta.buscarChavePix(tipoChavePix);
+            String chavePix = conta.buscarChavePix(tipoChave).getChave();
 
-                if (chavePix != null && chavePix.getChave().equals(chave)) {
-                    return conta;
-                }
+            if (chavePix.equals(chaveDestino)){
+                return conta;
             }
 
         }
@@ -48,6 +48,9 @@ public class Banco {
         if(usuarioRemovido == null) {
             throw new IdNaoEncontradoException("Usuario não encontrado");
         }
+    }
+
+    public boolean realizarPix(ContaBancaria contaOrigem, TipoChavePix destino, String chaveDestino, double value) {
     }
 
 }
