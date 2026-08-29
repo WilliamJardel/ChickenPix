@@ -9,13 +9,19 @@ import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
 public class PixService {
     private Banco banco;
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, double value) throws ValorPixInvalidoException {
+    public void realizarPix(ContaBancaria origem, String chaveDestino, double value) throws ValorPixInvalidoException, ChaveNaoEncontradaException {
         if (value <= 0.00){
             throw new ValorPixInvalidoException(
               "Valor inválido para realizar Pix."
             );
         }
         ContaBancaria destino = banco.buscarConta(chaveDestino);
+
+        if (destino == null){
+            throw new ChaveNaoEncontradaException(
+              "Chave Pix não encontrada."
+            );
+        }
 
         origem.debitar(value);
         destino.creditar(value);
