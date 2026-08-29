@@ -25,14 +25,16 @@ public class Banco {
         return usuarios.remove(id);
     }
 
-    public ContaBancaria buscarConta(TipoChavePix tipoChave, String chaveDestino) {
+    public ContaBancaria buscarConta(String chave) {
         for (Usuario usuario: usuarios.values()) {
             ContaBancaria conta = usuario.getConta();
 
-            String chavePix = conta.buscarChavePix(tipoChave).getChave();
+            for (TipoChavePix tipoChavePix : TipoChavePix.values()) {
+                ChavePix chavePix = conta.buscarChavePix(tipoChavePix);
 
-            if (chavePix.equals(chaveDestino)){
-                return conta;
+                if (chavePix != null && chavePix.getChave().equals(chave)) {
+                    return conta;
+                }
             }
 
         }
@@ -49,8 +51,4 @@ public class Banco {
             throw new IdNaoEncontradoException("Usuario não encontrado");
         }
     }
-
-    public boolean realizarPix(ContaBancaria contaOrigem, TipoChavePix destino, String chaveDestino, double value) {
-    }
-
 }
