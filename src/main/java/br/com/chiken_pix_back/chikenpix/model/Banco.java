@@ -1,8 +1,11 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
-import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
+import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
+
 
 import java.util.HashMap;
 
@@ -51,4 +54,29 @@ public class Banco {
             throw new IdNaoEncontradoException("Usuario não encontrado");
         }
     }
+
+    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
+        //no cadastro vamos usar as validaçoes da classe Usuario
+        Usuario.validarNome(nome);
+        Usuario.validarEmail(email);
+        Usuario.validarCPF(cpf);
+        Usuario.validarSenha(senha);
+
+        ContaBancaria conta = new ContaBancaria(numeroConta);
+
+        //ja temos os atributos validados so criar o usuario e adicionar no conjunto
+        Usuario usuario = new Usuario(
+                id,
+                nome,
+                email,
+                cpf,
+                senha,
+                conta
+        );
+
+        addUsuario(usuario);
+
+        return usuario;
+    }
+
 }
