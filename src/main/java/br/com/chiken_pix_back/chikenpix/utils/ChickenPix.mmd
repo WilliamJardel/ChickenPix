@@ -1,0 +1,108 @@
+classDiagram
+    namespace Modelos {
+        class Banco {
+            +Long id
+            +String nome
+            +String codigo
+        }
+        class Usuario {
+            +Long id
+            +String nome
+            +String cpf
+        }
+        class ContaBancaria {
+            +Long id
+            +String numero
+            +BigDecimal saldo
+            +StatusConta status
+            +Usuario usuario
+            +Banco banco
+        }
+        class ChavePix {
+            <<abstract>>
+            +Long id
+            +String chave
+            +TipoChavePix tipo
+            +ContaBancaria conta
+            +validarChave()*
+        }
+        class ChaveCpf {
+            +validarChave()
+        }
+        class ChaveCnpj {
+            +validarChave()
+        }
+        class ChaveEmail {
+            +validarChave()
+        }
+        class ChaveAleatoria {
+            +validarChave()
+        }
+        class Transacao {
+            +Long id
+            +BigDecimal valor
+            +LocalDateTime dataHora
+            +StatusTransacao status
+            +TipoTransacao tipo
+            +ContaBancaria contaOrigem
+            +ContaBancaria contaDestino
+        }
+    }
+
+    namespace Enumeradores {
+        class StatusConta {
+            <<enumeration>>
+            ATIVO
+            INATIVO
+            BLOQUEADO
+        }
+        class StatusTransacao {
+            <<enumeration>>
+            PENDENTE
+            CONCLUIDA
+            FALHADA
+        }
+        class TipoChavePix {
+            <<enumeration>>
+            CPF
+            CNPJ
+            EMAIL
+            ALEATORIA
+        }
+        class TipoTransacao {
+            <<enumeration>>
+            PIX_ENVIADO
+            PIX_RECEBIDO
+        }
+    }
+
+    namespace Servicos {
+        class PixService {
+            +executarTransacao(String chaveDestino, BigDecimal valor)
+            +cadastrarChave(ChavePix chave)
+            +validarSaldo(ContaBancaria conta, BigDecimal valor)
+        }
+    }
+
+%% Herança
+    ChavePix <|-- ChaveCpf
+    ChavePix <|-- ChaveCnpj
+    ChavePix <|-- ChaveEmail
+    ChavePix <|-- ChaveAleatoria
+
+%% Relacionamentos de Modelo
+    Usuario "1" -- "*" ContaBancaria : possui
+    Banco "1" -- "*" ContaBancaria : pertence
+    ContaBancaria "1" -- "*" ChavePix : possui
+    ContaBancaria "1" -- "*" Transacao : realiza/recebe
+
+%% Enumerações
+    ContaBancaria ..> StatusConta
+    ChavePix ..> TipoChavePix
+    Transacao ..> StatusTransacao
+    Transacao ..> TipoTransacao
+
+%% Serviços
+    PixService ..> ContaBancaria : opera
+    PixService ..> ChavePix : busca/valida
+    PixService ..> Transacao : gera
