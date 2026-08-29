@@ -13,6 +13,7 @@ public class ContaBancaria {
     private @Getter final String codigoBanco;
     private @Getter final String nomeBanco;
     private @Getter double saldo;
+    private @Getter StatusConta status;
     private final HashMap<TipoChavePix, ChavePix> chavesPix;
 
     public ContaBancaria(String numeroConta){
@@ -21,6 +22,7 @@ public class ContaBancaria {
         this.codigoBanco = "";
         this.nomeBanco = "ChikenPIX";
         this.saldo = 0.00;
+        this.status = StatusConta.ATIVA;
         this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
     }
 
