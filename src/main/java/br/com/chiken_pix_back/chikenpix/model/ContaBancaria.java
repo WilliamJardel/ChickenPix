@@ -2,6 +2,7 @@ package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
+import br.com.chiken_pix_back.chikenpix.exception.SaldoNaoZeradoException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import lombok.Getter;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ public class ContaBancaria {
     private @Getter final String codigoBanco;
     private @Getter final String nomeBanco;
     private @Getter double saldo;
+    private @Getter StatusConta status;
     private final HashMap<TipoChavePix, ChavePix> chavesPix;
 
     public ContaBancaria(String numeroConta){
@@ -21,7 +23,15 @@ public class ContaBancaria {
         this.codigoBanco = "";
         this.nomeBanco = "ChikenPIX";
         this.saldo = 0.00;
+        this.status = StatusConta.ATIVA;
         this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
+    }
+
+    public void encerrarConta() throws SaldoNaoZeradoException {
+        if(this.saldo != 0){
+            throw new SaldoNaoZeradoException("Erro ao encerrar conta: seu saldo não está zerado!");
+        }
+        this.status = StatusConta.DESATIVADA;
     }
 
     public void debitar(double valor){
