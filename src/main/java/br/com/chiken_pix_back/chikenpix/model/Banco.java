@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
+
 import java.util.HashMap;
 
 public class Banco {
@@ -35,6 +37,17 @@ public class Banco {
 
         }
         return null;
+    }
+
+    public void RemoverUsuario(int id) throws IdNaoEncontradoException {
+        Usuario usuarioRemovido = usuarios.remove(id);
+        //como a função retorna o objeto usuario, então se o ID existia a condição == null vai ser false
+        // e a exceção não vai ser lançada e o usuario vai ser removido com sucesso "espero",
+        // mas se o ID não existe, a condição vai ser verdadeira e adaí lança
+        // a exceção
+        if(usuarioRemovido == null) {
+            throw new IdNaoEncontradoException("Usuario não encontrado");
+        }
     }
 
 }
