@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class Usuario {
-    @Getter @Setter private int id;
+    private @Getter int id;
     @Getter @Setter private String nome;
     @Getter @Setter private String email;
     @Getter @Setter private String cpf;
