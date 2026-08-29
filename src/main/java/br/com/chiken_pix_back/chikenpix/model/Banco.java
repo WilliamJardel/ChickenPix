@@ -37,4 +37,8 @@ public class Banco {
         return null;
     }
 
+    public void RemoverUsuario(int id) {
+        usuarios.remove(id);
+    }
+
 }
