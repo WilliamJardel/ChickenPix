@@ -1,6 +1,0 @@
-expõe os endpoints REST da aplicação (@RestController, @RequestMapping).
-mapeia os verbos HTTP (GET, POST, PUT, DELETE)
-ecebe os DTOs anotados com @Valid,
-aciona a camada service e
-retorna a resposta envelopada em um ResponseEntity
-com o status HTTP adequado (200 OK, 201 Created, 404 Not Found).

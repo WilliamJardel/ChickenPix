@@ -1,3 +1,0 @@
-Interface que abstrai dados, herda do JpaRepository.
-Fornece Metodos prontos de CRUD(save(), findById(), delete()).
-Permite consultas personalizadas.
