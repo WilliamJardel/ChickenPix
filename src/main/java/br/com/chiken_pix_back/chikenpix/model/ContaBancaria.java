@@ -24,14 +24,14 @@ public class ContaBancaria {
         this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
     }
 
-    public void encerrarConta() throws SaldoNaoZeradoException {
+    public void encerrarConta() {
         if(this.saldo != 0){
             throw new SaldoNaoZeradoException("Erro ao encerrar conta: seu saldo não está zerado!");
         }
         this.status = StatusConta.DESATIVADA;
     }
 
-    public void debitar(double valor) throws ValorPixInvalidoException, SaldoInsuficienteException {
+    public void debitar(double valor) {
         if (getSaldo() - valor < 0){
             throw new SaldoInsuficienteException(
                     "Error: Saldo insuficiente para realizar Pix."
@@ -50,7 +50,7 @@ public class ContaBancaria {
         this.saldo += valor;
     }
 
-    public void addChavePix(TipoChavePix tipoChave, ChavePix chave) throws ChavePixJaCadastradaException {
+    public void addChavePix(TipoChavePix tipoChave, ChavePix chave) {
         if (buscarChavePix(tipoChave) != null){
             throw new ChavePixJaCadastradaException(
                     "Error: Chave Pix já cadastrada."
@@ -63,7 +63,7 @@ public class ContaBancaria {
         return chavesPix.get(tipoChave);
     }
 
-    public ChavePix rmChavePix(TipoChavePix tipoChave) throws ChaveNaoEncontradaException{
+    public ChavePix rmChavePix(TipoChavePix tipoChave) {
         ChavePix rmChave = buscarChavePix(tipoChave);
         if(rmChave == null) {
             throw new ChaveNaoEncontradaException(
