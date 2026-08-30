@@ -38,7 +38,7 @@ public class Banco {
         return null;
     }
 
-    public void removerUsuario(int id) throws IdNaoEncontradoException {
+    public void removerUsuario(int id) {
         Usuario usuarioRemovido = usuarios.remove(id);
         //como a função retorna o objeto usuario, então se o ID existia a condição == null vai ser false
         // e a exceção não vai ser lançada e o usuario vai ser removido com sucesso "espero",
