@@ -21,10 +21,6 @@ public class Banco {
         usuarios.put(usuario.getId(), usuario);
     }
 
-    public Usuario rmUsuario(int id) {
-        return usuarios.remove(id);
-    }
-
     public ContaBancaria buscarConta(String chave) {
         for (Usuario usuario: usuarios.values()) {
             ContaBancaria conta = usuario.getConta();
@@ -41,7 +37,7 @@ public class Banco {
         return null;
     }
 
-    public void RemoverUsuario(int id) throws IdNaoEncontradoException {
+    public void removerUsuario(int id) throws IdNaoEncontradoException {
         Usuario usuarioRemovido = usuarios.remove(id);
         //como a função retorna o objeto usuario, então se o ID existia a condição == null vai ser false
         // e a exceção não vai ser lançada e o usuario vai ser removido com sucesso "espero",
