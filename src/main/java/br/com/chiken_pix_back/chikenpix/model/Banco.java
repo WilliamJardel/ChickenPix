@@ -55,6 +55,11 @@ public class Banco {
         }
     }
 
+    //ele retorna o id atual e incrementa pro proximo
+    public int gerarId() {
+        return proximoId++;
+    }
+
     public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
