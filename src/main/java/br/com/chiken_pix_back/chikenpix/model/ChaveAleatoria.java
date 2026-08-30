@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.AleatoriaInvalidaException;
+
 import java.util.UUID;
 
 public class ChaveAleatoria implements ChavePix{
@@ -29,7 +31,9 @@ public class ChaveAleatoria implements ChavePix{
             UUID.fromString(chave);
             return true;
         } catch (IllegalArgumentException e){
-            return false;
+            throw new AleatoriaInvalidaException(
+                    "Chave aleatória inválida."
+            );
         }
     }
 }
