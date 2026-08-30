@@ -65,4 +65,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(SaldoInsuficienteException.class)
+    public ResponseEntity<String> tratarSaldoInsuficiente(SaldoInsuficienteException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }

@@ -45,7 +45,7 @@ public class ContaBancaria {
     public void addChavePix(TipoChavePix tipoChave, ChavePix chave) throws ChavePixJaCadastradaException {
         if (buscarChavePix(tipoChave) != null){
             throw new ChavePixJaCadastradaException(
-                    "Chave Pix já cadastrada."
+                    "Error: Chave Pix já cadastrada."
             );
         }
         this.chavesPix.put(tipoChave, chave);
@@ -59,7 +59,7 @@ public class ContaBancaria {
         ChavePix rmChave = buscarChavePix(tipoChave);
         if(rmChave == null) {
             throw new ChaveNaoEncontradaException(
-                    "Chave Pix não encontrada."
+                    "Error: Chave Pix não encontrada."
             );
         }
 
