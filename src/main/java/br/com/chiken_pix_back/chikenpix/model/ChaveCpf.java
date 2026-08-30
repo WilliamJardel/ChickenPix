@@ -21,13 +21,8 @@ public class ChaveCpf implements ChavePix {
     }
 
     @Override
-    public boolean validar() {
-        try {
-            return validaCpf();
-        } catch (CPFInvalidoException e) {
-            System.err.println("Erro de validação: " + e.getMessage());
-            return false;
-        }
+    public boolean validar() throws CPFInvalidoException{
+        return validaCpf();
     }
 
     public boolean validaCpf() throws CPFInvalidoException {
