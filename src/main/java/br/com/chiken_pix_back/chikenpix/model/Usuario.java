@@ -55,12 +55,16 @@ public class Usuario {
         }
     }
 
-    public void atualizarDados(String novoNome, String novoEmail) throws NomeInvalidoException, EmailInvalidoException{
+    public void atualizarNome(String novoNome) throws NomeInvalidoException{
         if(novoNome != null && !novoNome.isBlank()) {
             validarNome(novoNome);
             this.nome = novoNome;
         }
 
+
+    }
+
+    public void atualizarEmail(String novoEmail) throws EmailInvalidoException{
         if(novoEmail != null && !novoEmail.isBlank()) {
             validarEmail(novoEmail);
             this.email = novoEmail;
