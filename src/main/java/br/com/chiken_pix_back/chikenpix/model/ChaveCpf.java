@@ -21,12 +21,12 @@ public class ChaveCpf implements ChavePix {
     }
 
     @Override
-    public boolean validar() throws CPFInvalidoException{
+    public boolean validar() {
         return validaCpf();
     }
 
 
-    public boolean validaCpf() throws CPFInvalidoException {
+    public boolean validaCpf() {
         if (this.chave == null || this.chave.isBlank()) {
             throw new CPFInvalidoException("O CPF não pode ser vazio");
         }
