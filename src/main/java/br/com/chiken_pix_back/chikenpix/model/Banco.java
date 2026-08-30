@@ -50,6 +50,27 @@ public class Banco {
     }
 
     public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) {
+        //vamos usar as validacoes da classe usuario
+        Usuario.validarNome(nome);
+        Usuario.validarEmail(email);
+        Usuario.validarCPF(cpf);
+        Usuario.validarSenha(senha);
+
+        ContaBancaria conta = new ContaBancaria(numeroConta);
+
+        Usuario usuario = new Usuario(
+                id,
+                nome,
+                email,
+                cpf,
+                senha,
+                conta
+        );
+
+        addUsuario(usuario);
+
+        return usuario;
+
     }
 
 }
