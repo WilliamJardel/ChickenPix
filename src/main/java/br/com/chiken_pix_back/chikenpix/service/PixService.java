@@ -6,9 +6,15 @@ import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import br.com.chiken_pix_back.chikenpix.model.Banco;
 import br.com.chiken_pix_back.chikenpix.model.ChavePix;
 import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PixService {
     private Banco banco;
+
+    public PixService(Banco banco){
+        this.banco = banco;
+    }
 
     public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) throws  ValorPixInvalidoException, ChaveNaoEncontradaException, SaldoInsuficienteException{
         ContaBancaria destino = banco.buscarConta(chaveDestino);
