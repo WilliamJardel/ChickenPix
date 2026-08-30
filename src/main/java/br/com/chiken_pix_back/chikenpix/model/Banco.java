@@ -60,6 +60,10 @@ public class Banco {
         return proximoId++;
     }
 
+    public int gerarNumeroConta() {
+        return proximoNumeroConta++;
+    }
+
     public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
