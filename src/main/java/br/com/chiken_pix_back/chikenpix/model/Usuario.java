@@ -66,4 +66,11 @@ public class Usuario {
             this.email = novoEmail;
         }
     }
+
+    public void atualizarSenha(String novaSenha) throws  SenhaInvalidaException{
+        if(novaSenha != null && !novaSenha.isBlank()){
+            validarSenha(novaSenha);
+            this.senha = novaSenha;
+        }
+    }
 }
