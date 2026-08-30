@@ -58,16 +58,35 @@ public class Banco {
         Usuario.validarEmail(email);
         Usuario.validarSenha(senha);
 
+        String cpfValidado = null;
+        String cnpjValidado = null;
+
+        if (cpf != null && !cpf.isBlank() && cnpj != null && !cnpj.isBlank()) {
+            throw new CPFInvalidoException("Erro: Você não pode preencher CPF e CNPJ ao mesmo tempo.");
+        }
+
+        if ((cpf == null || cpf.isBlank()) && (cnpj == null || cnpj.isBlank())) {
+            throw new CPFInvalidoException("Erro: É necessário informar o CPF ou o CNPJ.");
+        }
+
+        if (cpf != null && !cpf.isBlank()) {
+            validarCPF(cpf);
+            cpfValidado = cpf.trim();
+        } else {
+            validarCNPJ(cnpj);
+            cnpjValidado = cnpj.trim();
+        }
+
         ContaBancaria conta = new ContaBancaria(numeroConta);
 
         Usuario usuario = new Usuario(
                 id,
                 nome,
                 email,
-                cpf,
+                cpfValidado,
                 senha,
                 conta,
-                cnpj
+                cnpjValidado
         );
 
         addUsuario(usuario);
