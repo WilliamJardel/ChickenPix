@@ -1,4 +1,5 @@
 package br.com.chiken_pix_back.chikenpix.model;
+import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 
 public class ChaveCpf implements ChavePix {
     private String chave;
@@ -20,13 +21,22 @@ public class ChaveCpf implements ChavePix {
     }
 
     @Override
-    public boolean validar(){
+    public boolean validar() throws CPFInvalidoException{
         return validaCpf();
     }
 
-    private boolean validaCpf(){
-        String regexCPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
-        return this.chave != null && this.chave.matches(regexCPF);
-    }
 
+    public boolean validaCpf() throws CPFInvalidoException {
+        if (this.chave == null || this.chave.isBlank()) {
+            throw new CPFInvalidoException("O CPF não pode ser vazio");
+        }
+      
+        String regexCPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
+
+        if (!this.chave.matches(regexCPF)) {
+            throw new CPFInvalidoException("CPF inválido, o formato é 000.000.000-00");
+        }
+
+        return true;
+    }
 }
