@@ -19,5 +19,14 @@ public class ChaveTelefone implements ChavePix {
         return TipoChavePix.TELEFONE;
     }
 
+    @Override
+    public boolean validar() {
+        return validaTelefone();
+    }
+
+    private boolean validaTelefone() {
+        String regexTelefone = "^\\+55[1-9]{2}9\\d{8}$";
+        return this.chave != null && this.chave.matches(regexTelefone);
+    }
 
 }
