@@ -1,27 +1,18 @@
 package br.com.chiken_pix_back.chikenpix.model;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.UUID;
 import java.time.LocalDateTime;
 
 public class Transacao {
+    private String id;
+    private double valor;
+    private TipoTransacao tipo;
+    private static LocalDateTime dateTime;
+    private ContaBancaria origem;
+    private ContaBancaria destino;
 
-    private @Getter String id;
-    @Getter private double valor;
-    private @Getter TipoTransacao tipo;
-    private @Getter LocalDateTime dateTime;
-    @Getter @Setter private StatusTransacao status;
-    private @Getter ContaBancaria origem;
-    private @Getter ContaBancaria destino;
-
-    public Transacao(double valor, ContaBancaria origem, ContaBancaria destino, TipoTransacao tipo){
-        this.id = UUID.randomUUID().toString();
+    public Transacao(double valor, ContaBancaria destino){
         this.valor = valor;
-        this.origem = origem;
         this.destino = destino;
-        this.tipo = tipo;
-        this.dateTime = LocalDateTime.now();
-        this.status = StatusTransacao.PENDENTE; // sempre vai ta pendente
     }
+
+
 }
