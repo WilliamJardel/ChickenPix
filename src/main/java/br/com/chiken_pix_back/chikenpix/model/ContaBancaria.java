@@ -64,6 +64,7 @@ public class ContaBancaria {
                     "Error: Chave Pix já cadastrada."
             );
         }
+        chave.validar();
         this.chavesPix.put(tipoChave, chave);
     }
 
