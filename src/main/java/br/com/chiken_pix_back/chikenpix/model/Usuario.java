@@ -54,4 +54,16 @@ public class Usuario {
             throw new CPFInvalidoException("Error: CPF Inválido");
         }
     }
+
+    public void atualizarDados(String novoNome, String novoEmail) throws NomeInvalidoException, EmailInvalidoException{
+        if(novoNome != null && !novoNome.isBlank()) {
+            validarNome(novoNome);
+            this.nome = novoNome;
+        }
+
+        if(novoEmail != null && !novoEmail.isBlank()) {
+            validarEmail(novoEmail);
+            this.email = novoEmail;
+        }
+    }
 }
