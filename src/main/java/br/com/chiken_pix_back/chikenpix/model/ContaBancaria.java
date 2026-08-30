@@ -1,9 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
-import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
-import br.com.chiken_pix_back.chikenpix.exception.SaldoNaoZeradoException;
-import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.*;
 import lombok.Getter;
 import java.util.HashMap;
 
@@ -34,7 +31,18 @@ public class ContaBancaria {
         this.status = StatusConta.DESATIVADA;
     }
 
-    public void debitar(double valor){
+    public void debitar(double valor) throws ValorPixInvalidoException, SaldoInsuficienteException {
+        if (getSaldo() - valor < 0){
+            throw new SaldoInsuficienteException(
+                    "Error: Saldo insuficiente para realizar Pix."
+            );
+        }
+
+        if (valor <= 0.00){
+            throw new ValorPixInvalidoException(
+                    "Error: Valor inválido para realizar Pix."
+            );
+        }
         this.saldo -= valor;
     }
 

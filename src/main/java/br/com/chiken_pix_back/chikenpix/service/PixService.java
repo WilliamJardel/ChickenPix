@@ -10,18 +10,7 @@ import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
 public class PixService {
     private Banco banco;
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, double value) throws ValorPixInvalidoException, ChaveNaoEncontradaException, SaldoInsuficienteException {
-        if (origem.getSaldo() - value < 0){
-            throw new SaldoInsuficienteException(
-              "Error: Saldo insuficiente para realizar Pix."
-            );
-        }
-
-        if (value <= 0.00){
-            throw new ValorPixInvalidoException(
-              "Error: Valor inválido para realizar Pix."
-            );
-        }
+    public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) throws  ValorPixInvalidoException, ChaveNaoEncontradaException, SaldoInsuficienteException{
         ContaBancaria destino = banco.buscarConta(chaveDestino);
 
         if (destino == null){
@@ -30,7 +19,7 @@ public class PixService {
             );
         }
 
-        origem.debitar(value);
-        destino.creditar(value);
+        origem.debitar(valor);
+        destino.creditar(valor);
     }
 }
