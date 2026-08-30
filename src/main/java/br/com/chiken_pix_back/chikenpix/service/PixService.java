@@ -16,7 +16,7 @@ public class PixService {
         this.banco = banco;
     }
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) throws  ValorPixInvalidoException, ChaveNaoEncontradaException, SaldoInsuficienteException{
+    public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) {
         ContaBancaria destino = banco.buscarConta(chaveDestino);
 
         if (destino == null){
