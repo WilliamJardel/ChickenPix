@@ -19,6 +19,12 @@ public class PixService {
     public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) {
         ContaBancaria destino = banco.buscarConta(chaveDestino);
 
+        if (valor <= 0.00){
+            throw new ValorPixInvalidoException(
+                    "Error: Valor inválido para realizar Pix."
+            );
+        }
+
         if (destino == null){
             throw new ChaveNaoEncontradaException(
               "Error: Chave Pix não encontrada."
