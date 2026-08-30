@@ -1,7 +1,12 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-import br.com.chiken_pix_back.chikenpix.exception.*;
+import br.com.chiken_pix_back.chikenpix.exception.SaldoInsuficienteException;
+import br.com.chiken_pix_back.chikenpix.exception.SaldoNaoZeradoException;
+import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
+import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
+
 import lombok.Getter;
+
 import java.util.HashMap;
 
 public class ContaBancaria {
