@@ -1,4 +1,5 @@
 package br.com.chiken_pix_back.chikenpix.model;
+import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
 
 public class ChaveTelefone implements ChavePix {
     private String chave;
@@ -25,8 +26,14 @@ public class ChaveTelefone implements ChavePix {
     }
 
     private boolean validaTelefone() {
+        if (this.chave == null || this.chave.isBlank()) {
+            throw new TelefoneInvalidoException("O telefone não pode ser vazio");
+        }
         String regexTelefone = "^\\+55[1-9]{2}9\\d{8}$";
-        return this.chave != null && this.chave.matches(regexTelefone);
+        if (!this.chave.matches(regexTelefone)) {
+            throw new TelefoneInvalidoException("Telefone inválido, o formato aceito é +55DD9XXXXXXXX");
+        }
+        return true;
     }
 
 }
