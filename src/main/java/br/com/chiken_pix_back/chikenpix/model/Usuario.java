@@ -15,7 +15,7 @@ public class Usuario {
     @Getter @Setter private String email;
     @Getter @Setter private String cpf;
     @Getter @Setter private String senha;
-    private @Getter final ContaBancaria conta;
+    private @Getter ContaBancaria conta;
 
     //alterando o id e a conta
     public Usuario(String nome, String email, String cpf, String senha){
@@ -24,6 +24,14 @@ public class Usuario {
         this.cpf = cpf;
         this.senha = senha;
 
+    }
+
+    //como precisamos definir tanto o id, quanto a conta eles vao ser chamados ao atribuir no Banco
+    void definirId(int id) {
+        this.id = id;
+    }
+    void definirContaBancaria(ContaBancaria conta) {
+        this.conta = conta;
     }
 
 
