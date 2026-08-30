@@ -32,17 +32,12 @@ public class ContaBancaria {
     }
 
     public void debitar(double valor) {
-        if (getSaldo() - valor < 0){
+        if (getSaldo() < valor){
             throw new SaldoInsuficienteException(
                     "Error: Saldo insuficiente para realizar Pix."
             );
         }
 
-        if (valor <= 0.00){
-            throw new ValorPixInvalidoException(
-                    "Error: Valor inválido para realizar Pix."
-            );
-        }
         this.saldo -= valor;
     }
 
