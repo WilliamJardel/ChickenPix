@@ -3,9 +3,11 @@ package br.com.chiken_pix_back.chikenpix.model;
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
+@Component
 public class Banco {
     private HashMap<Integer, Usuario> usuarios;
 
