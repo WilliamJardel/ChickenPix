@@ -62,8 +62,8 @@ public class Banco {
 
     //retorna o o numero da conta atual e incrementa pro proximo
     //da para transformar ambos em String para melhor representaçao
-    public int gerarNumeroConta() {
-        return proximoNumeroConta++;
+    public String gerarNumeroConta() {
+        return String.valueOf(proximoNumeroConta++);
     }
 
     public Usuario cadastrarUsuario(String nome, String email, String cpf, String senha) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
@@ -73,16 +73,20 @@ public class Banco {
         Usuario.validarCPF(cpf);
         Usuario.validarSenha(senha);
 
+        int id = gerarId();
+        String numeroConta = gerarNumeroConta();
+
         ContaBancaria conta = new ContaBancaria(numeroConta);
 
         Usuario usuario = new Usuario(
-                id,
                 nome,
                 email,
                 cpf,
-                senha,
-                conta
+                senha
         );
+
+        usuario.definirId(id);
+        usuario.definirContaBancaria(conta);
 
         addUsuario(usuario);
 
