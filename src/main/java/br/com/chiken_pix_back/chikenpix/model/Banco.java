@@ -9,9 +9,15 @@ import java.util.HashMap;
 
 public class Banco {
     private HashMap<Integer, Usuario> usuarios;
+    private int proximoId;
+    private int proximoNumeroConta;
+
 
     public Banco() {
         this.usuarios = new HashMap<Integer, Usuario>();
+        this.proximoId = 1;
+        this.proximoNumeroConta = 1;
+
     }
 
     public Usuario getUsuario(int id) {
