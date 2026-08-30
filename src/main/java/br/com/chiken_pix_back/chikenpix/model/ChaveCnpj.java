@@ -1,6 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 import br.com.caelum.stella.validation.CNPJValidator;
-
+import br.com.chiken_pix_back.chikenpix.exception.CNPJInvalidoException;
 
 public class ChaveCnpj implements ChavePix {
     private String chave;
@@ -23,10 +23,14 @@ public class ChaveCnpj implements ChavePix {
 
     @Override
     public boolean validar(){
-        if (this.chave == null) {
-        return false;
-    }
-        return new CNPJValidator().isEligible(this.chave);
+        if (this.chave == null || this.chave.isBlank()) {
+            throw new CNPJInvalidoException("O CNPJ não pode ser vazio");
+        }
+        boolean ehValido = new CNPJValidator().isEligible(this.chave);
+        if (!ehValido) {
+            throw new CNPJInvalidoException("CNPJ inválido");
+        }
+        return true;
     }
 
 
