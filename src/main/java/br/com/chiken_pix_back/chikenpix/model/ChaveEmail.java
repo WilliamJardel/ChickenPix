@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
+
 public class ChaveEmail implements ChavePix {
     private String chave;
 
@@ -26,9 +28,13 @@ public class ChaveEmail implements ChavePix {
 
     private boolean validaEmail(){
         if (this.chave == null || this.chave.isBlank()) {
-            return false;
+            throw new EmailInvalidoException("O email não pode ser vazio");
         }
-        return this.chave.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        String regexEmail = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        if (!this.chave.trim().matches(regexEmail)) {
+            throw new EmailInvalidoException("E-mail inválido, insira um formato correto (ex: usuario@dominio.com)");
+        }
+        return true;
     }
 
 }
