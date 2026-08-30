@@ -31,7 +31,7 @@ public class Usuario {
 
     public static void validarSenha(String valor) throws SenhaInvalidaException {
         if (valor == null || valor.isBlank() || !valor.trim().matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=!]).{8,}$")){
-                throw new SenhaInvalidaException("Senha Inválida");
+                throw new SenhaInvalidaException("Error: Senha Inválida");
         }
         //Nesse metodo primeiro verifica se a senha não está nula ou se o espaço está vazio ou cheio de espaços em branco,
         //depois eu uso a trim() pra retirar qualquer espaço que o usuário digite "sem querer" e uso p matches() para estabelecer o padrão da ssenha a ser definida
@@ -39,19 +39,19 @@ public class Usuario {
     }
     public static void validarEmail(String email) throws EmailInvalidoException {
         if(email == null || email.isBlank() || !email.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new EmailInvalidoException("email Inválido");
+            throw new EmailInvalidoException("Error: Email Inválido");
         }
     }
 
     public static void validarNome(String nome) throws NomeInvalidoException{
         if(nome == null || nome.isBlank() || !nome.trim().matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\\\s]{3,100}$")) {
-            throw new NomeInvalidoException("Nome Inválido");
+            throw new NomeInvalidoException("Error: Nome Inválido");
         }
     }
 
     public static void validarCPF(String cpf) throws CPFInvalidoException{
         if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\\\d{11}|\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2})$")) {
-            throw new CPFInvalidoException("Nome Inválido");
+            throw new CPFInvalidoException("Error: CPF Inválido");
         }
     }
 }

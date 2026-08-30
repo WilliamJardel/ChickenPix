@@ -48,7 +48,7 @@ public class Banco {
         // mas se o ID não existe, a condição vai ser verdadeira e adaí lança
         // a exceção
         if(usuarioRemovido == null) {
-            throw new IdNaoEncontradoException("Usuario não encontrado");
+            throw new IdNaoEncontradoException("Error: Usuario não encontrado");
         }
     }
 }
