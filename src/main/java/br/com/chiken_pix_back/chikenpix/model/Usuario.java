@@ -10,12 +10,13 @@ public class Usuario {
     private @Getter int id;
     @Getter @Setter private String nome;
     @Getter @Setter private String email;
-    @Getter @Setter private String cpf;
+    private @Getter String cpf;
     @Getter @Setter private String senha;
     private @Getter final ContaBancaria conta;
-    @Getter @Setter private String cnpj;
+    private @Getter String cnpj;
+    @Getter @Setter String telefone;
 
-    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta, String cnpj){
+    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta, String cnpj, String telefone){
 
         this.id = id;
         this.nome = nome;
@@ -24,6 +25,7 @@ public class Usuario {
         this.senha = senha;
         this.conta = conta;
         this.cnpj = cnpj;
+        this.telefone = telefone;
 
     }
 
@@ -57,12 +59,20 @@ public class Usuario {
 
 
 
-    public static void validarCNPJ(String cnpj) throws CNPJInvalidoException {
+    public static void validarCNPJ(String cnpj) {
         if (cnpj == null || cnpj.isBlank() || !cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
             throw new CNPJInvalidoException("Error: CNPJ Inválido");
         }
     }
 
+
+
+    public static void validarTelefone(String telefone) {
+        if (telefone == null || telefone.isBlank() ||
+                !telefone.trim().matches("^(\\(\\d{2}\\)\\s?)?\\d{4,5}-\\d{4}$|^\\d{10,11}$")) {
+            throw new TelefoneInvalidoException("Error: Telefone Inválido");
+        }
+    }
 
     public void atualizarNome(String novoNome) throws NomeInvalidoException{
         if(novoNome != null && !novoNome.isBlank()) {

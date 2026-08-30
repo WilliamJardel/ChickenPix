@@ -52,7 +52,7 @@ public class Banco {
         }
     }
 
-    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta, String cnpj) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
+    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta, String cnpj, String telefone) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
         Usuario.validarEmail(email);
@@ -86,7 +86,8 @@ public class Banco {
                 cpfValidado,
                 senha,
                 conta,
-                cnpjValidado
+                cnpjValidado,
+                telefone
         );
 
         addUsuario(usuario);
