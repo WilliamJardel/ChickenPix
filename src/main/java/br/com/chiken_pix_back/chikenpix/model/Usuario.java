@@ -17,14 +17,12 @@ public class Usuario {
     @Getter @Setter private String senha;
     private @Getter final ContaBancaria conta;
 
-    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta){
-
-        this.id = id;
+    //alterando o id e a conta
+    public Usuario(String nome, String email, String cpf, String senha){
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.senha = senha;
-        this.conta = conta;
 
     }
 
