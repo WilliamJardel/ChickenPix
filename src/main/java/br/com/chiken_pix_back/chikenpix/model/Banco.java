@@ -56,13 +56,13 @@ public class Banco {
     }
 
     //retorna o id atual e incrementa pro proximo
-    public int gerarId() {
+    private int gerarId() {
         return proximoId++;
     }
 
     //retorna o o numero da conta atual e incrementa pro proximo
     //da para transformar ambos em String para melhor representaçao
-    public String gerarNumeroConta() {
+    private String gerarNumeroConta() {
         return String.valueOf(proximoNumeroConta++);
     }
 
