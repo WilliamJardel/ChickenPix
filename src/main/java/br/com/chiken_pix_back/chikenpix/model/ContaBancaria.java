@@ -18,8 +18,8 @@ public class ContaBancaria {
 
     public ContaBancaria(String numeroConta){
         this.numeroConta = numeroConta;
-        this.numeroAgencia = "";
-        this.codigoBanco = "";
+        this.numeroAgencia = "0001001";
+        this.codigoBanco = "D022NSJZ02012";
         this.nomeBanco = "ChikenPIX";
         this.saldo = 0.00;
         this.status = StatusConta.ATIVA;
