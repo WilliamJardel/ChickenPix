@@ -25,11 +25,12 @@ public class ChaveCpf implements ChavePix {
         return validaCpf();
     }
 
+
     public boolean validaCpf() throws CPFInvalidoException {
         if (this.chave == null || this.chave.isBlank()) {
             throw new CPFInvalidoException("O CPF não pode ser vazio");
         }
-
+      
         String regexCPF = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$";
 
         if (!this.chave.matches(regexCPF)) {

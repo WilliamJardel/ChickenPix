@@ -1,8 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
-import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
-import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.*;
 import lombok.Getter;
 import java.util.HashMap;
 
@@ -13,6 +11,7 @@ public class ContaBancaria {
     private @Getter final String codigoBanco;
     private @Getter final String nomeBanco;
     private @Getter double saldo;
+    private @Getter StatusConta status;
     private final HashMap<TipoChavePix, ChavePix> chavesPix;
 
     public ContaBancaria(String numeroConta){
@@ -21,10 +20,29 @@ public class ContaBancaria {
         this.codigoBanco = "";
         this.nomeBanco = "ChikenPIX";
         this.saldo = 0.00;
+        this.status = StatusConta.ATIVA;
         this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
     }
 
-    public void debitar(double valor){
+    public void encerrarConta() throws SaldoNaoZeradoException {
+        if(this.saldo != 0){
+            throw new SaldoNaoZeradoException("Erro ao encerrar conta: seu saldo não está zerado!");
+        }
+        this.status = StatusConta.DESATIVADA;
+    }
+
+    public void debitar(double valor) throws ValorPixInvalidoException, SaldoInsuficienteException {
+        if (getSaldo() - valor < 0){
+            throw new SaldoInsuficienteException(
+                    "Error: Saldo insuficiente para realizar Pix."
+            );
+        }
+
+        if (valor <= 0.00){
+            throw new ValorPixInvalidoException(
+                    "Error: Valor inválido para realizar Pix."
+            );
+        }
         this.saldo -= valor;
     }
 
@@ -35,7 +53,7 @@ public class ContaBancaria {
     public void addChavePix(TipoChavePix tipoChave, ChavePix chave) throws ChavePixJaCadastradaException {
         if (buscarChavePix(tipoChave) != null){
             throw new ChavePixJaCadastradaException(
-              "Chave Pix já cadastrada."
+                    "Error: Chave Pix já cadastrada."
             );
         }
         this.chavesPix.put(tipoChave, chave);
@@ -49,7 +67,7 @@ public class ContaBancaria {
         ChavePix rmChave = buscarChavePix(tipoChave);
         if(rmChave == null) {
             throw new ChaveNaoEncontradaException(
-                    "Chave Pix não encontrada."
+                    "Error: Chave Pix não encontrada."
             );
         }
 
@@ -57,18 +75,4 @@ public class ContaBancaria {
         return rmChave;
     }
 
-    public boolean realizarPix(TipoChavePix destino, double value) throws ChaveNaoEncontradaException, ValorPixInvalidoException {
-        if(buscarChavePix(destino) == null) {
-            throw new ChaveNaoEncontradaException(
-                "Chave Pix não encontrada."
-            );
-        }
-        if(value <= 0.00) {
-            throw new ValorPixInvalidoException(
-                    "Valor inválido inserido."
-            );
-        }
-        creditar(value);
-        return true;
-    }
 }
