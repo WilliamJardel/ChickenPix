@@ -79,4 +79,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(AleatoriaInvalidaException.class)
+    public ResponseEntity<String> tratarAleatoriaInvalida(AleatoriaInvalidaException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }
