@@ -7,6 +7,9 @@ import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 import java.util.HashMap;
 
+import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
+import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
+
 public class Banco {
     private HashMap<Integer, Usuario> usuarios;
 
@@ -49,11 +52,10 @@ public class Banco {
         }
     }
 
-    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
+    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta, String cnpj) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
         Usuario.validarEmail(email);
-        Usuario.validarCPF(cpf);
         Usuario.validarSenha(senha);
 
         ContaBancaria conta = new ContaBancaria(numeroConta);
@@ -64,7 +66,8 @@ public class Banco {
                 email,
                 cpf,
                 senha,
-                conta
+                conta,
+                cnpj
         );
 
         addUsuario(usuario);

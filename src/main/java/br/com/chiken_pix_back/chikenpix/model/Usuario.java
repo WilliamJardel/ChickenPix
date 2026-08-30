@@ -1,10 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.caelum.stella.tinytype.CPF;
-import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
+import br.com.chiken_pix_back.chikenpix.exception.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,8 +13,9 @@ public class Usuario {
     @Getter @Setter private String cpf;
     @Getter @Setter private String senha;
     private @Getter final ContaBancaria conta;
+    @Getter @Setter private String cnpj;
 
-    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta){
+    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta, String cnpj){
 
         this.id = id;
         this.nome = nome;
@@ -25,6 +23,7 @@ public class Usuario {
         this.cpf = cpf;
         this.senha = senha;
         this.conta = conta;
+        this.cnpj = cnpj;
 
     }
 
@@ -50,10 +49,20 @@ public class Usuario {
     }
 
     public static void validarCPF(String cpf) {
-        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\\\d{11}|\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2})$")) {
+        if(cpf == null || !cpf.trim().matches("^(\\\\d{11}|\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2})$")) {
             throw new CPFInvalidoException("Error: CPF Inválido");
         }
+
     }
+
+
+
+    public static void validarCNPJ(String cnpj) throws CNPJInvalidoException {
+        if (cnpj == null || cnpj.isBlank() || !cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
+            throw new CNPJInvalidoException("Error: CNPJ Inválido");
+        }
+    }
+
 
     public void atualizarNome(String novoNome) throws NomeInvalidoException{
         if(novoNome != null && !novoNome.isBlank()) {
