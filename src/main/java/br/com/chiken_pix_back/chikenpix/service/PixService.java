@@ -19,14 +19,14 @@ public class PixService {
 
         if (value <= 0.00){
             throw new ValorPixInvalidoException(
-              "Valor inválido para realizar Pix."
+              "Error: Valor inválido para realizar Pix."
             );
         }
         ContaBancaria destino = banco.buscarConta(chaveDestino);
 
         if (destino == null){
             throw new ChaveNaoEncontradaException(
-              "Chave Pix não encontrada."
+              "Error: Chave Pix não encontrada."
             );
         }
 
