@@ -13,4 +13,11 @@ public class ChaveTelefone implements ChavePix {
     public String getChave() {
         return chave;
     }
+
+    @Override
+    public TipoChavePix getTipoChave(){
+        return TipoChavePix.TELEFONE;
+    }
+
+
 }
