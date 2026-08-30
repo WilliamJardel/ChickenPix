@@ -1,6 +1,10 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
+import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
+import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 import java.util.HashMap;
 
 public class Banco {
@@ -49,7 +53,7 @@ public class Banco {
         }
     }
 
-    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) {
+    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
         Usuario.validarEmail(email);
