@@ -7,6 +7,9 @@ import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 import java.util.HashMap;
 
+import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
+import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
+
 public class Banco {
     private HashMap<Integer, Usuario> usuarios;
 
@@ -49,12 +52,30 @@ public class Banco {
         }
     }
 
-    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
+    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta, String cnpj, String telefone) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
         Usuario.validarEmail(email);
-        Usuario.validarCPF(cpf);
         Usuario.validarSenha(senha);
+
+        String cpfValidado = null;
+        String cnpjValidado = null;
+
+        if (cpf != null && !cpf.isBlank() && cnpj != null && !cnpj.isBlank()) {
+            throw new CPFInvalidoException("Erro: Você não pode preencher CPF e CNPJ ao mesmo tempo.");
+        }
+
+        if ((cpf == null || cpf.isBlank()) && (cnpj == null || cnpj.isBlank())) {
+            throw new CPFInvalidoException("Erro: É necessário informar o CPF ou o CNPJ.");
+        }
+
+        if (cpf != null && !cpf.isBlank()) {
+            validarCPF(cpf);
+            cpfValidado = cpf.trim();
+        } else {
+            validarCNPJ(cnpj);
+            cnpjValidado = cnpj.trim();
+        }
 
         ContaBancaria conta = new ContaBancaria(numeroConta);
 
@@ -62,9 +83,11 @@ public class Banco {
                 id,
                 nome,
                 email,
-                cpf,
+                cpfValidado,
                 senha,
-                conta
+                conta,
+                cnpjValidado,
+                telefone
         );
 
         addUsuario(usuario);
