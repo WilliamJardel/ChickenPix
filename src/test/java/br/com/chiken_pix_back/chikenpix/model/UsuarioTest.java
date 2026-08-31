@@ -1,6 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
+import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -51,5 +52,22 @@ public class UsuarioTest {
         assertThat(usuario.getNome()).isEqualTo("Kethillyn Costa");
     }
 
+    @Test
+    @DisplayName("Deve lançar excessão com telefone inválido")
+    void deveLancarExcessaoTelefoneInvalido(){
+        Banco banco = new Banco();
+        assertThatThrownBy(
+                () -> banco.cadastrarUsuario(
+                        "Haroldinho",
+                        "silva@email.com",
+                        "047.020.860-80",
+                        "Senha@123",
+                        null,
+                        "123" // Formato inválido
+                )
+        )
+                .isInstanceOf(TelefoneInvalidoException.class);
+    }
 
 }
+

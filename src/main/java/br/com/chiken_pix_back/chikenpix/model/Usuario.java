@@ -28,7 +28,7 @@ public class Usuario {
         this.conta = new ContaBancaria(UUID.randomUUID().toString());
         this.cnpj = cnpj;
         this.telefone = telefone;
-
+        validarTelefone(telefone);
     }
 
 
