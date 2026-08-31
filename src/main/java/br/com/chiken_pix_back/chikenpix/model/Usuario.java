@@ -29,6 +29,7 @@ public class Usuario {
         this.cnpj = cnpj;
         this.telefone = telefone;
         validarTelefone(telefone);
+        validarCPF(cpf);
     }
 
 

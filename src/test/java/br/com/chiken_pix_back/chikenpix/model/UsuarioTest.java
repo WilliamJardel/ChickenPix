@@ -1,4 +1,5 @@
 package br.com.chiken_pix_back.chikenpix.model;
+import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
@@ -69,5 +70,21 @@ public class UsuarioTest {
                 .isInstanceOf(TelefoneInvalidoException.class);
     }
 
+    @Test
+    @DisplayName("deve lançar excessao com CPF inválido")
+    void deveLancarExcessaoCPFInvalido(){
+        Banco banco = new Banco();
+        assertThatThrownBy(
+                () -> banco.cadastrarUsuario(
+                        "Haroldinho",
+                        "email@gmail.com",
+                        "00a",
+                        "Senha@123",
+                        null,
+                        "88988888888"
+                )
+        )
+                .isInstanceOf(CPFInvalidoException.class);
+    }
 }
 
