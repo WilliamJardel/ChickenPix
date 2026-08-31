@@ -66,8 +66,10 @@ public class Usuario {
 
 
     public static void validarCNPJ(String cnpj) {
-        if (cnpj == null || cnpj.isBlank() || !cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
-            throw new CNPJInvalidoException("Error: CNPJ Inválido");
+        if (cnpj != null && !cnpj.isBlank()) {
+            if(!cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
+                throw new CNPJInvalidoException("Error: CNPJ Inválido");
+            }
         }
     }
 
