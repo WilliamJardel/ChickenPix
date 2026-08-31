@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.service;
 
+import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import br.com.chiken_pix_back.chikenpix.model.ChaveEmail;
 import br.com.chiken_pix_back.chikenpix.model.Banco;
@@ -100,6 +101,45 @@ public class PixServiceTest {
         )
                 .isInstanceOf(ValorPixInvalidoException.class)
                 .hasMessage("Error: Valor inválido para realizar Pix.");
+
+
+    }
+
+    @Test
+    @DisplayName("Não deve realiar pix, se a chave pix não for encontrada")
+    void naoDeveRealizarPixComChaveNaoEcontrada(){
+        Usuario usuarioAutenticadoOrigem = new Usuario(
+                "Regis",
+                "regis@email.com",
+                "894.321.242-06",
+                "bancodedados",
+                null,
+                "82976099776"
+        );
+        usuarioAutenticadoOrigem.getConta().creditar(100);
+
+
+        Usuario usuarioAutenticadoDestino = new Usuario(
+                "Camila",
+                "camila@email.com",
+                "124.324.244-07",
+                "minecraft",
+                null,
+                "82976089345"
+        );
+
+
+        banco.addUsuario(usuarioAutenticadoDestino);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(),
+                        "camila@email.com",
+                        40
+                )
+        )
+                .isInstanceOf(ChaveNaoEncontradaException.class)
+                .hasMessage("Error: Chave Pix não encontrada.");
 
 
     }
