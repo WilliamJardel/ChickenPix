@@ -146,7 +146,7 @@ public class PixServiceTest {
     }
 
     @Test
-    @DisplayName("Não deve realiar pix, se o saldo não for suficiente")
+    @DisplayName("Não deve realizar pix, se o saldo não for suficiente")
     void naoDeveRealizarPixComSaldoInsuficiente(){
         Usuario usuarioAutenticadoOrigem = new Usuario(
                 "Regis",
@@ -221,5 +221,42 @@ public class PixServiceTest {
         assertThat(usuarioAutenticadoOrigem.getConta().getSaldo()).isEqualTo(100);
 
 
+    }
+
+    @Test
+    @DisplayName("Não deve alterar o saldo do destino e origem, se o saldo não for suficiente")
+    void naoDeveAlterarSaldoComSaldoInsuficiente(){
+        Usuario usuarioAutenticadoOrigem = new Usuario(
+                "Regis",
+                "regis@email.com",
+                "894.321.242-06",
+                "bancodedados",
+                null,
+                "82976099776"
+        );
+
+        Usuario usuarioAutenticadoDestino = new Usuario(
+                "Camila",
+                "camila@email.com",
+                "124.324.244-07",
+                "minecraft",
+                null,
+                "82976089345"
+        );
+
+        usuarioAutenticadoDestino.getConta()
+                .addChavePix(TipoChavePix.EMAIL, new ChaveEmail("camila@email.com"));
+
+        banco.addUsuario(usuarioAutenticadoDestino);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(),
+                        "camila@email.com",
+                        70
+                )
+        ).isInstanceOf(SaldoInsuficienteException.class);
+        assertThat(usuarioAutenticadoDestino.getConta().getSaldo()).isEqualTo(0.00);
+        assertThat(usuarioAutenticadoOrigem.getConta().getSaldo()).isEqualTo(0.00);
     }
 }
