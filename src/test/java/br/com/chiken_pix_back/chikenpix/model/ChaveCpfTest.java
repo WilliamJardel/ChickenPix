@@ -1,44 +1,50 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 
-import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class ChaveCpfTest {
 
     @Test
-    void deveCriarChaveCpfValida() {
+    @DisplayName("Deve gerar uma chave Pix do tipo CPF válida")
+    void deveCriarChaveCPFValida() {
 
-        ChaveCpf chave = new ChaveCpf("079.891.052-09");
+        ChaveCpf chave = new ChaveCpf("071.894.067-06");
 
-        assertEquals("079.891.052-09", chave.getChave());
-        assertEquals(TipoChavePix.CPF, chave.getTipoChave());
-        assertTrue(chave.validar());
+        assertThat(chave.getChave()).isEqualTo("071.894.067-06");
+        assertThat(chave.getTipoChave()).isEqualTo(TipoChavePix.CPF);
+        assertThat(chave.validar()).isTrue();
     }
 
     @Test
+    @DisplayName("Deve lançar a exceção de CPFInvalido")
     void deveLancarExcecaoParaCPFInvalido() {
 
-        ChaveCpf chave = new ChaveCpf("079891052091");
+        ChaveCpf chave = new ChaveCpf("07183406706");
 
-        assertThrows(
-                CPFInvalidoException.class,
+        assertThatThrownBy(
                 chave::validar
-        );
+        )
+                .isInstanceOf(CPFInvalidoException.class)
+                .hasMessageContaining(
+                        "CPF inválido"
+                );
     }
 
     @Test
+    @DisplayName("Deve lançar a exceção de CPFInvalido por estar vazio")
     void deveLancarExcecaoParaCPFVazio() {
 
         ChaveCpf chave = new ChaveCpf("");
 
-        assertThrows(
-                CPFInvalidoException.class,
+        assertThatThrownBy(
                 chave::validar
-        );
+        )
+                .isInstanceOf(CPFInvalidoException.class)
+                .hasMessageContaining("O CPF não pode ser vazio");
     }
 }
