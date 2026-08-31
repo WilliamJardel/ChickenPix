@@ -55,8 +55,10 @@ public class Usuario {
 
     public static void validarCPF(String cpf) {
       
-        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
-            throw new CPFInvalidoException("Error: CPF Inválido");
+        if(cpf != null && !cpf.isBlank()) {
+            if(!cpf.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
+                throw new CPFInvalidoException("Error: CPF Inválido");
+            }
         }
 
     }
@@ -64,8 +66,10 @@ public class Usuario {
 
 
     public static void validarCNPJ(String cnpj) {
-        if (cnpj == null || cnpj.isBlank() || !cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
-            throw new CNPJInvalidoException("Error: CNPJ Inválido");
+        if (cnpj != null && !cnpj.isBlank()) {
+            if(!cnpj.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
+                throw new CNPJInvalidoException("Error: CNPJ Inválido");
+            }
         }
     }
 
