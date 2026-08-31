@@ -1,14 +1,17 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 
 public class ContaBancariaTest {
 
     @Test
+    @DisplayName("Deve cadastrar Chave Pix do tipo Email na Conta Bancaria")
     void deveCadastrarChaveEmail(){
         ContaBancaria contaDaniel = new ContaBancaria("12345");
         ChaveEmail chave = new ChaveEmail("daniel@gmail.com");
@@ -17,12 +20,14 @@ public class ContaBancariaTest {
 
         ChavePix chaveEncontrada = contaDaniel.buscarChavePix(TipoChavePix.EMAIL);
 
-        assertNotNull(chaveEncontrada);
-        assertEquals("daniel@gmail.com", chaveEncontrada.getChave());
-        assertEquals(TipoChavePix.EMAIL, chaveEncontrada.getTipoChave());
+        assertThat(chaveEncontrada).isNotNull();
+        assertThat(chaveEncontrada.getChave()).isEqualTo("daniel@gmail.com");
+        assertThat(chaveEncontrada.getTipoChave()).isEqualTo(TipoChavePix.EMAIL);
+
     }
 
     @Test
+    @DisplayName("Deve gerar e cadastrar chave Pix aleatória na Conta Bancaria")
     void deveCadastrarChaveAleatoria(){
         ContaBancaria contaDaniel = new ContaBancaria("12345");
         ChaveAleatoria chave = new ChaveAleatoria();
@@ -31,9 +36,9 @@ public class ContaBancariaTest {
 
         ChavePix chaveEncontrada = contaDaniel.buscarChavePix(TipoChavePix.ALEATORIA);
 
-        assertNotNull(chaveEncontrada);
-        assertEquals(chave.getChave(), chaveEncontrada.getChave());
-        assertEquals(TipoChavePix.ALEATORIA, chaveEncontrada.getTipoChave());
+        assertThat(chaveEncontrada).isNotNull();
+        assertThat(chaveEncontrada.getChave()).isEqualTo(chave.getChave());
+        assertThat(chaveEncontrada.getTipoChave()).isEqualTo(TipoChavePix.ALEATORIA);
     }
 
     @Test
@@ -49,11 +54,10 @@ public class ContaBancariaTest {
 
         contaDaniel.addChavePix(TipoChavePix.EMAIL, primeiraChave);
 
-        assertThrows(
-                ChavePixJaCadastradaException.class,
+        assertThatThrownBy(
                 () -> contaDaniel.addChavePix(TipoChavePix.EMAIL, segundaChave)
-                // Depois de executar o assertThrows ele esxecuta o addChave
-                // Caso não tivesse o '() ->' o java esxutaria primeiro o add e depois o assert.
-        );
+        )
+                .isInstanceOf(ChavePixJaCadastradaException.class)
+                .hasMessageContaining("Error: Chave Pix já cadastrada.");
     }
 }
