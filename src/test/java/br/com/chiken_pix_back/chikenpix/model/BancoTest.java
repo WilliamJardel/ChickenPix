@@ -13,7 +13,7 @@ class BancoTest {
     private Banco banco;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         banco = new Banco();
     }
 
@@ -38,12 +38,12 @@ class BancoTest {
     void deveLancarExcecaoAoPreencherCpfECnpjJuntos() {
         assertThatThrownBy(
                 () -> banco.cadastrarUsuario(
-                    "Empresa",
-                    "emp@email.com",
-                    "52998224725",
-                    "Senha@123",
-                    "12345678000199",
-                    "88999998888"
+                        "Empresa",
+                        "emp@email.com",
+                        "52998224725",
+                        "Senha@123",
+                        "12345678000199",
+                        "88999998888"
                 )
         )
                 .isInstanceOf(CPFInvalidoException.class)
@@ -116,103 +116,105 @@ class BancoTest {
                 )
         )
                 .isInstanceOf(CPFInvalidoException.class);
-    @DisplayName("Deve encontrar uma conta pela chave PIX CPF")
-    void deveEncontrarContaPelaChaveCpf() {
-        Usuario usuario = banco.cadastrarUsuario(
-                "Carlos",
-                "carlos@email.com",
-                "946.950.340-30",
-                "Senha@123",
-                null,
-                "88999998888"
-        );
-
-        ContaBancaria conta = usuario.getConta();
-
-        ChavePix chave = new ChaveCpf("946.950.340-30");
-
-        conta.addChavePix(TipoChavePix.CPF, chave);
-
-        ContaBancaria encontrada = banco.buscarConta("946.950.340-30");
-
-        assertThat(encontrada).isEqualTo(conta);
-
     }
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX CPF")
+        void deveEncontrarContaPelaChaveCpf () {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
 
-    @Test
-    @DisplayName("Deve encontrar uma conta pela chave PIX email")
-    void deveEncontrarContaPelaChaveEmail() {
-        Usuario usuario = banco.cadastrarUsuario(
-                "Carlos",
-                "carlos@email.com",
-                "946.950.340-30",
-                "Senha@123",
-                null,
-                "88999998888"
-        );
+            ContaBancaria conta = usuario.getConta();
 
-        ContaBancaria conta = usuario.getConta();
+            ChavePix chave = new ChaveCpf("946.950.340-30");
 
-        conta.addChavePix(TipoChavePix.EMAIL, new ChaveEmail("carlos@email.com"));
+            conta.addChavePix(TipoChavePix.CPF, chave);
 
-        ContaBancaria encontrada = banco.buscarConta("carlos@email.com");
+            ContaBancaria encontrada = banco.buscarConta("946.950.340-30");
 
-        assertThat(encontrada).isEqualTo(conta);
+            assertThat(encontrada).isEqualTo(conta);
 
+        }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX email")
+        void deveEncontrarContaPelaChaveEmail () {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            conta.addChavePix(TipoChavePix.EMAIL, new ChaveEmail("carlos@email.com"));
+
+            ContaBancaria encontrada = banco.buscarConta("carlos@email.com");
+
+            assertThat(encontrada).isEqualTo(conta);
+
+        }
+
+        //refatorar com o metodo de buscar conta no Banco
+        @Test
+        @DisplayName("Deve retornar null quando a chave PIX nao existir")
+        void deveRetornarNullQuandoChaveNaoExistir () {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            usuario.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
+
+            ContaBancaria encontrada = banco.buscarConta("111.222.333-44");
+
+            assertThat(encontrada).isNull();
+
+
+        }
+
+        @Test
+        @DisplayName("Deve encontrar a conta correta entre varios usuarios")
+        void deveEncontrarContaCorretaEntreUsuarios() {
+            Usuario usuario1 = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            Usuario usuario2 = banco.cadastrarUsuario(
+                    "Pedro",
+                    "pedro@email.com",
+                    "945.950.340-30",
+                    "Senha@375",
+                    null,
+                    "88999997888"
+            );
+
+            ContaBancaria conta1 = usuario1.getConta();
+            ContaBancaria conta2 = usuario2.getConta();
+
+            usuario1.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
+            usuario2.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("945.950.340-30"));
+
+            ContaBancaria encontrada = banco.buscarConta("945.950.340-30");
+
+            assertThat(encontrada).isEqualTo(conta2);
+
+        }
     }
-
-    //refatorar com o metodo de buscar conta no Banco
-    @Test
-    @DisplayName("Deve retornar null quando a chave PIX nao existir")
-    void deveRetornarNullQuandoChaveNaoExistir() {
-        Usuario usuario = banco.cadastrarUsuario(
-                "Carlos",
-                "carlos@email.com",
-                "946.950.340-30",
-                "Senha@123",
-                null,
-                "88999998888"
-        );
-
-        usuario.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
-
-        ContaBancaria encontrada = banco.buscarConta("111.222.333-44");
-
-        assertThat(encontrada).isNull();
-
-
-    }
-
-    @Test
-    @DisplayName("Deve encontrar a conta correta entre varios usuarios")
-    void deveEncontrarContaCorretaEntreUsuarios() {
-        Usuario usuario1 = banco.cadastrarUsuario(
-                "Carlos",
-                "carlos@email.com",
-                "946.950.340-30",
-                "Senha@123",
-                null,
-                "88999998888"
-        );
-
-        Usuario usuario2 = banco.cadastrarUsuario(
-                "Pedro",
-                "pedro@email.com",
-                "945.950.340-30",
-                "Senha@375",
-                null,
-                "88999997888"
-        );
-
-        ContaBancaria conta1 = usuario1.getConta();
-        ContaBancaria conta2 = usuario2.getConta();
-
-        usuario1.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
-        usuario2.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("945.950.340-30"));
-
-        ContaBancaria encontrada = banco.buscarConta("945.950.340-30");
-
-        assertThat(encontrada).isEqualTo(conta2);
-
-    }
-}
