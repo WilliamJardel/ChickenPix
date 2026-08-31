@@ -185,4 +185,41 @@ public class PixServiceTest {
 
 
     }
+
+    @Test
+    @DisplayName("Não deve alterar o saldo da conta origem, se a chave pix não for encontrada")
+    void naoDeveAlterarSaldoComChaveNaoEcontrada(){
+        Usuario usuarioAutenticadoOrigem = new Usuario(
+                "Regis",
+                "regis@email.com",
+                "894.321.242-06",
+                "bancodedados",
+                null,
+                "82976099776"
+        );
+        usuarioAutenticadoOrigem.getConta().creditar(100);
+
+
+        Usuario usuarioAutenticadoDestino = new Usuario(
+                "Camila",
+                "camila@email.com",
+                "124.324.244-07",
+                "minecraft",
+                null,
+                "82976089345"
+        );
+
+        banco.addUsuario(usuarioAutenticadoDestino);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(),
+                        "camila@email.com",
+                        40
+                )
+        ).isInstanceOf(ChaveNaoEncontradaException.class);
+        assertThat(usuarioAutenticadoOrigem.getConta().getSaldo()).isEqualTo(100);
+
+
+    }
 }
