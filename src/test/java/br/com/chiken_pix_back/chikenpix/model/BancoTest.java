@@ -20,7 +20,14 @@ class BancoTest {
     @Test
     @DisplayName("Deve cadastrar um usuário com CPF com sucesso")
     void deveCadastrarUsuarioComCpf() {
-        Usuario usuario = banco.cadastrarUsuario("Keyt", "silva@email.com", "047.020.860-80", "Senha@123", null, "88999998888");
+        Usuario usuario = banco.cadastrarUsuario(
+                "Keyt",
+                "silva@email.com",
+                "047.020.860-80",
+                "Senha@123",
+                null,
+                "88999998888"
+        );
 
         assertThat(usuario).isNotNull();
         assertThat(banco.getUsuario(usuario.getId())).isEqualTo(usuario);
@@ -29,23 +36,47 @@ class BancoTest {
     @Test
     @DisplayName("Deve lançar exceção se preencher CPF e CNPJ juntos")
     void deveLancarExcecaoAoPreencherCpfECnpjJuntos() {
-        assertThatThrownBy(() -> banco.cadastrarUsuario("Empresa", "emp@email.com", "52998224725", "Senha@123", "12345678000199", "88999998888"))
+        assertThatThrownBy(
+                () -> banco.cadastrarUsuario(
+                    "Empresa",
+                    "emp@email.com",
+                    "52998224725",
+                    "Senha@123",
+                    "12345678000199",
+                    "88999998888"
+                )
+        )
                 .isInstanceOf(CPFInvalidoException.class)
-                .hasMessageContaining("Erro: Você não pode preencher CPF e CNPJ ao mesmo tempo.");
+                .hasMessageContaining(
+                        "Erro: Você não pode preencher CPF e CNPJ ao mesmo tempo."
+                );
     }
 
     @Test
     @DisplayName("Deve lançar exceção ao tentar remover usuário com ID inexistente")
     void deveLancarExcecaoAoRemoverUsuarioInexistente() {
-        assertThatThrownBy(() -> banco.removerUsuario("id-inexistente-123"))
+        assertThatThrownBy(
+                () -> banco.removerUsuario(
+                        "id-inexistente-123"
+                )
+        )
                 .isInstanceOf(IdNaoEncontradoException.class)
-                .hasMessageContaining("Error: Usuario não encontrado");
+                .hasMessageContaining(
+                        "Error: Usuario não encontrado"
+                );
     }
 
     @Test
     @DisplayName("Deve remover um usuário existente com sucesso")
     void deveRemoverUsuarioComSucesso() {
-        Usuario usuario = banco.cadastrarUsuario("Carlos", "carlos@email.com", "946.950.340-30", "Senha@123", null, "88999998888");
+        Usuario usuario = banco.cadastrarUsuario(
+                "Carlos",
+                "carlos@email.com",
+                "946.950.340-30",
+                "Senha@123",
+                null,
+                "88999998888"
+        );
 
         banco.removerUsuario(usuario.getId());
 
