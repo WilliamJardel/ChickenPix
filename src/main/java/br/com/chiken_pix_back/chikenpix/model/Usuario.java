@@ -6,8 +6,10 @@ import br.com.chiken_pix_back.chikenpix.exception.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 public class Usuario {
-    private @Getter int id;
+    private @Getter String id;
     @Getter @Setter private String nome;
     @Getter @Setter private String email;
     private @Getter String cpf;
@@ -16,14 +18,14 @@ public class Usuario {
     private @Getter String cnpj;
     @Getter @Setter String telefone;
 
-    public Usuario(int id, String nome, String email, String cpf, String senha, ContaBancaria conta, String cnpj, String telefone){
+    public Usuario(String nome, String email, String cpf, String senha, String cnpj, String telefone){
 
-        this.id = id;
+        this.id = UUID.randomUUID().toString();
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.senha = senha;
-        this.conta = conta;
+        this.conta = new ContaBancaria(UUID.randomUUID().toString());
         this.cnpj = cnpj;
         this.telefone = telefone;
 
