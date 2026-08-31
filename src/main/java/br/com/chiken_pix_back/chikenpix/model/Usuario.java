@@ -47,14 +47,14 @@ public class Usuario {
     }
 
     public static void validarNome(String nome) {
-        if(nome == null || nome.isBlank() || !nome.trim().matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\\\s]{3,100}$")) {
+        if(nome == null || nome.isBlank() || !nome.trim().matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s]{3,100}$")) {
             throw new NomeInvalidoException("Error: Nome Inválido");
         }
     }
 
     public static void validarCPF(String cpf) {
       
-        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\\\d{11}|\\\\d{3}\\\\.\\\\d{3}\\\\.\\\\d{3}-\\\\d{2})$")) {
+        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
             throw new CPFInvalidoException("Error: CPF Inválido");
         }
 
