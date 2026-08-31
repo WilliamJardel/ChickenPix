@@ -217,4 +217,28 @@ class BancoTest {
             assertThat(encontrada).isEqualTo(conta2);
 
         }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX Telefone")
+        void deveEncontrarContaPelaChaveTelefone() {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            ChavePix chave = new ChaveTelefone("+5588999998888");
+
+            conta.addChavePix(TipoChavePix.TELEFONE, chave);
+
+            ContaBancaria encontrada = banco.buscarConta("+5588999998888");
+
+            assertThat(encontrada).isEqualTo(conta);
+
+        }
     }
