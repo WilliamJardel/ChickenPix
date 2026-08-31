@@ -82,4 +82,28 @@ class BancoTest {
 
         assertThat(banco.getUsuario(usuario.getId())).isNull();
     }
+
+    @Test
+    @DisplayName("Deve encontrar uma conta pela chave PIX")
+    void deveEncontrarContaPelaChave() {
+        Usuario usuario = banco.cadastrarUsuario(
+                "Carlos",
+                "carlos@email.com",
+                "946.950.340-30",
+                "Senha@123",
+                null,
+                "88999998888"
+        );
+
+        ContaBancaria conta = usuario.getConta();
+
+        ChavePix chave = new ChaveCpf("946.950.340-30");
+
+        conta.addChavePix(TipoChavePix.CPF, chave);
+
+        ContaBancaria encontrada = banco.buscarConta("946.950.340-30");
+
+        assertThat(encontrada).isEqualTo(conta);
+
+    }
 }
