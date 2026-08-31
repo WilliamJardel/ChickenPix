@@ -3,40 +3,48 @@ package br.com.chiken_pix_back.chikenpix.model;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class ChaveEmailTest {
 
     @Test
+    @DisplayName("Deve criar uma chave Pix do tipo Email válida")
     void deveCriarChaveEmailValida() {
 
-        ChaveEmail chave = new ChaveEmail("kimila-zuiliam-naira-pedrokam-teste@gmail.com");
+        ChaveEmail chave = new ChaveEmail("es@gmail.com");
 
-        assertEquals("kimila-zuiliam-naira-pedrokam-teste@gmail.com", chave.getChave());
-        assertEquals(TipoChavePix.EMAIL, chave.getTipoChave());
-        assertTrue(chave.validar());
+        assertThat(chave.getChave()).isEqualTo("es@gmail.com");
+        assertThat(chave.getTipoChave()).isEqualTo(TipoChavePix.EMAIL);
+        assertThat(chave.validar()).isTrue();
     }
 
     @Test
+    @DisplayName("Deve lançar a exceção de EmailInvalido")
     void deveLancarExcecaoParaEmailInvalido() {
 
-        ChaveEmail chave = new ChaveEmail("email-invalido");
+        ChaveEmail chave = new ChaveEmail("esgmail.com");
 
-        assertThrows(
-                EmailInvalidoException.class,
+        assertThatThrownBy(
                 chave::validar
-        );
+        )
+                .isInstanceOf(EmailInvalidoException.class)
+                .hasMessageContaining(
+                        "E-mail inválido, insira um formato correto (ex: usuario@dominio.com)"
+                );
     }
 
     @Test
+    @DisplayName("Deve lançar a exceção de EmailInvalido por estar vazio")
     void deveLancarExcecaoParaEmailVazio() {
 
         ChaveEmail chave = new ChaveEmail("");
 
-        assertThrows(
-                EmailInvalidoException.class,
+        assertThatThrownBy(
                 chave::validar
-        );
+        )
+                .isInstanceOf(EmailInvalidoException.class)
+                .hasMessageContaining("O email não pode ser vazio");
     }
 }
