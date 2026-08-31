@@ -11,10 +11,10 @@ import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
 
 public class Banco {
-    private HashMap<Integer, Usuario> usuarios;
+    private HashMap<String, Usuario> usuarios;
 
     public Banco() {
-        this.usuarios = new HashMap<Integer, Usuario>();
+        this.usuarios = new HashMap<String, Usuario>();
     }
 
     public Usuario getUsuario(int id) {
@@ -52,7 +52,7 @@ public class Banco {
         }
     }
 
-    public Usuario cadastrarUsuario(int id, String nome, String email, String cpf, String senha, String numeroConta, String cnpj, String telefone) throws NomeInvalidoException, EmailInvalidoException, CPFInvalidoException, SenhaInvalidaException {
+    public Usuario cadastrarUsuario(String nome, String email, String cpf, String senha, String cnpj, String telefone) {
         //vamos usar as validacoes da classe usuario
         Usuario.validarNome(nome);
         Usuario.validarEmail(email);
@@ -77,15 +77,11 @@ public class Banco {
             cnpjValidado = cnpj.trim();
         }
 
-        ContaBancaria conta = new ContaBancaria(numeroConta);
-
         Usuario usuario = new Usuario(
-                id,
                 nome,
                 email,
                 cpfValidado,
                 senha,
-                conta,
                 cnpjValidado,
                 telefone
         );
