@@ -1,10 +1,8 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
-import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.NomeInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
-import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
+
 import java.util.HashMap;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
@@ -17,7 +15,7 @@ public class Banco {
         this.usuarios = new HashMap<String, Usuario>();
     }
 
-    public Usuario getUsuario(int id) {
+    public Usuario getUsuario(String id) {
         return usuarios.get(id);
     }
 
@@ -41,7 +39,7 @@ public class Banco {
         return null;
     }
 
-    public void removerUsuario(int id) {
+    public void removerUsuario(String id) {
         Usuario usuarioRemovido = usuarios.remove(id);
         //como a função retorna o objeto usuario, então se o ID existia a condição == null vai ser false
         // e a exceção não vai ser lançada e o usuario vai ser removido com sucesso "espero",
