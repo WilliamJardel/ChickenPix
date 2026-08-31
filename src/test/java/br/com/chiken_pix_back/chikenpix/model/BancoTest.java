@@ -217,4 +217,76 @@ class BancoTest {
             assertThat(encontrada).isEqualTo(conta2);
 
         }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX Telefone")
+        void deveEncontrarContaPelaChaveTelefone() {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            ChavePix chave = new ChaveTelefone("+5588999998888");
+
+            conta.addChavePix(TipoChavePix.TELEFONE, chave);
+
+            ContaBancaria encontrada = banco.buscarConta("+5588999998888");
+
+            assertThat(encontrada).isEqualTo(conta);
+
+        }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX CNPJ")
+        void deveEncontrarContaPelaChaveCnpj() {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    null,
+                    "Senha@123",
+                    "11222333000181",
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            ChavePix chave = new ChaveCnpj("11222333000181");
+
+            conta.addChavePix(TipoChavePix.CNPJ, chave);
+
+            ContaBancaria encontrada = banco.buscarConta("11222333000181");
+
+            assertThat(encontrada).isEqualTo(conta);
+
+        }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX Aleatoria")
+        void deveEncontrarContaPelaChaveAleatoria() {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    "946.950.340-30",
+                    "Senha@123",
+                    null,
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            ChavePix chave = new ChaveAleatoria();
+
+            conta.addChavePix(TipoChavePix.ALEATORIA, chave);
+
+            ContaBancaria encontrada = banco.buscarConta(chave.getChave());
+
+            assertThat(encontrada).isEqualTo(conta);
+
+        }
     }
