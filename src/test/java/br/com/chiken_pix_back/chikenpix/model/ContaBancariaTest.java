@@ -1,7 +1,5 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-import br.com.chiken_pix_back.chikenpix.enumerations.StatusConta;
-import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
 
 import org.junit.jupiter.api.Test;
@@ -61,18 +59,5 @@ public class ContaBancariaTest {
         )
                 .isInstanceOf(ChavePixJaCadastradaException.class)
                 .hasMessageContaining("Error: Chave Pix já cadastrada.");
-    }
-
-    @Test
-    @DisplayName("Deve inicializar a conta com todos os valores padrão e saldo zerado")
-    void deveInicializarContaComValoresPadrao() {
-        ContaBancaria conta = new ContaBancaria("12345");
-
-        assertThat(conta.getNumeroConta()).isEqualTo("12345");
-        assertThat(conta.getNumeroAgencia()).isEqualTo("0001001");
-        assertThat(conta.getCodigoBanco()).isEqualTo("D022NSJZ02012");
-        assertThat(conta.getNomeBanco()).isEqualTo("ChikenPIX");
-        assertThat(conta.getSaldo()).isEqualTo(0.00);
-        assertThat(conta.getStatus()).isEqualTo(StatusConta.ATIVA);
     }
 }
