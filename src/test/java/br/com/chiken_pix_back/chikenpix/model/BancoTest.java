@@ -241,4 +241,30 @@ class BancoTest {
             assertThat(encontrada).isEqualTo(conta);
 
         }
+
+        @Test
+        @DisplayName("Deve encontrar uma conta pela chave PIX CNPJ")
+        void deveEncontrarContaPelaChaveCnpj() {
+            Usuario usuario = banco.cadastrarUsuario(
+                    "Carlos",
+                    "carlos@email.com",
+                    null,
+                    "Senha@123",
+                    "11222333000181",
+                    "88999998888"
+            );
+
+            ContaBancaria conta = usuario.getConta();
+
+            ChavePix chave = new ChaveCnpj("11222333000181");
+
+            conta.addChavePix(TipoChavePix.CNPJ, chave);
+
+            ContaBancaria encontrada = banco.buscarConta("11222333000181");
+
+            assertThat(encontrada).isEqualTo(conta);
+
+
+
+        }
     }
