@@ -55,8 +55,10 @@ public class Usuario {
 
     public static void validarCPF(String cpf) {
       
-        if(cpf == null || cpf.isBlank() || !cpf.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
-            throw new CPFInvalidoException("Error: CPF Inválido");
+        if(cpf != null && !cpf.isBlank()) {
+            if(!cpf.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
+                throw new CPFInvalidoException("Error: CPF Inválido");
+            }
         }
 
     }

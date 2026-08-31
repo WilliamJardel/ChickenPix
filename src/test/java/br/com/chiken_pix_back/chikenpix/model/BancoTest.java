@@ -82,4 +82,23 @@ class BancoTest {
 
         assertThat(banco.getUsuario(usuario.getId())).isNull();
     }
+
+    @Test
+    @DisplayName("Deve cadastrar um usuário com CNPJ com sucesso quando CPF for nulo")
+    void deveCadastrarUsuarioComCnpjComSucesso() {
+        Usuario usuario = banco.cadastrarUsuario(
+                "Empresa Chiken Pix Ltda",
+                "contato@chikenpix.com",
+                null,                   // CPF é nulo
+                "Senha@123",
+                "11.222.333/0001-81",   // CNPJ informado
+                "88999998888"
+        );
+
+
+        assertThat(usuario).isNotNull();
+        assertThat(usuario.getCnpj()).isEqualTo("11.222.333/0001-81");
+        assertThat(usuario.getCpf()).isNull();
+        assertThat(banco.getUsuario(usuario.getId())).isEqualTo(usuario);
+    }
 }
