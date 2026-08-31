@@ -128,4 +128,26 @@ class BancoTest {
         assertThat(encontrada).isEqualTo(conta);
 
     }
+
+    //refatorar com o metodo de buscar conta no Banco
+    @Test
+    @DisplayName("Deve retornar null quando a chave PIX nao existir")
+    void deveRetornarNullQuandoChaveNaoExistir() {
+        Usuario usuario = banco.cadastrarUsuario(
+                "Carlos",
+                "carlos@email.com",
+                "946.950.340-30",
+                "Senha@123",
+                null,
+                "88999998888"
+        );
+
+        usuario.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
+
+        ContaBancaria encontrada = banco.buscarConta("111.222.333-44");
+
+        assertThat(encontrada).isNull();
+
+
+    }
 }
