@@ -150,4 +150,37 @@ class BancoTest {
 
 
     }
+
+    @Test
+    @DisplayName("Deve encontrar a conta correta entre varios usuarios")
+    void deveEncontrarContaCorretaEntreUsuarios() {
+        Usuario usuario1 = banco.cadastrarUsuario(
+                "Carlos",
+                "carlos@email.com",
+                "946.950.340-30",
+                "Senha@123",
+                null,
+                "88999998888"
+        );
+
+        Usuario usuario2 = banco.cadastrarUsuario(
+                "Pedro",
+                "pedro@email.com",
+                "945.950.340-30",
+                "Senha@375",
+                null,
+                "88999997888"
+        );
+
+        ContaBancaria conta1 = usuario1.getConta();
+        ContaBancaria conta2 = usuario2.getConta();
+
+        usuario1.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("946.950.340-30"));
+        usuario2.getConta().addChavePix(TipoChavePix.CPF, new ChaveCpf("945.950.340-30"));
+
+        ContaBancaria encontrada = banco.buscarConta("945.950.340-30");
+
+        assertThat(encontrada).isEqualTo(conta2);
+
+    }
 }
