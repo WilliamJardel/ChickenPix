@@ -101,4 +101,21 @@ class BancoTest {
         assertThat(usuario.getCpf()).isNull();
         assertThat(banco.getUsuario(usuario.getId())).isEqualTo(usuario);
     }
+
+    @Test
+    @DisplayName("Deve lançar exceção se tentar cadastrar sem CPF e sem CNPJ ao mesmo tempo")
+    void deveLancarExcecaoAoCadastrarSemCpfESemCnpj() {
+        assertThatThrownBy(
+                () -> banco.cadastrarUsuario(
+                        "Usuário Sem Documento",
+                        "semdoc@email.com",
+                        null, // CPF nulo
+                        "Senha@123",
+                        null, // CNPJ nulo
+                        "88999998888"
+                )
+        )
+                .isInstanceOf(CPFInvalidoException.class);
+
+    }
 }
