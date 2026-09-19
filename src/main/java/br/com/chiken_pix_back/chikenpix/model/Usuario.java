@@ -3,20 +3,30 @@ package br.com.chiken_pix_back.chikenpix.model;
 import br.com.caelum.stella.tinytype.CPF;
 import br.com.chiken_pix_back.chikenpix.exception.*;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
 
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
+    @Id
     private @Getter String id;
+
     @Getter @Setter private String nome;
     @Getter @Setter private String email;
     private @Getter String cpf;
     @Getter @Setter private String senha;
-    private @Getter final ContaBancaria conta;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private @Getter ContaBancaria conta;
+
     private @Getter String cnpj;
     @Getter @Setter String telefone;
+
+    protected Usuario(){};
 
     public Usuario(String nome, String email, String cpf, String senha, String cnpj, String telefone){
 
@@ -26,6 +36,7 @@ public class Usuario {
         this.cpf = cpf;
         this.senha = senha;
         this.conta = new ContaBancaria(UUID.randomUUID().toString());
+        this.conta.setUsuario(this); // Faz a conta saber que a conta criada pertence a esse usuario.
         this.cnpj = cnpj;
         this.telefone = telefone;
         validarTelefone(telefone);
