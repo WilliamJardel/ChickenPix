@@ -1,4 +1,5 @@
 package br.com.chiken_pix_back.chikenpix.model;
+import br.com.chiken_pix_back.chikenpix.exception.StatusInvalidoException;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,18 @@ public class Transacao {
         this.status = StatusTransacao.PENDENTE;
         this.tipo = tipo;
         this.dateHora = LocalDateTime.now();
+    }
+
+    public void concluir(){
+        this.status = StatusTransacao.CONCLUIDA;
+    }
+
+    public void cancelar(){
+        if (this.status != StatusTransacao.PENDENTE){
+            throw new StatusInvalidoException("Somente transações pendentes podem ser canceladas!");
+        }
+
+        this.status = StatusTransacao.CANCELADA;
     }
 
 
