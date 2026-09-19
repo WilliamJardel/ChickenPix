@@ -2,29 +2,33 @@ package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
 
+@Component
 public class Banco {
-    private HashMap<String, Usuario> usuarios;
 
-    public Banco() {
-        this.usuarios = new HashMap<String, Usuario>();
+    private final UserRepository usuarios;
+
+    public Banco(UserRepository usuarios) {
+        this.usuarios = usuarios;
     }
 
     public Usuario getUsuario(String id) {
-        return usuarios.get(id);
+        return usuarios.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException("Error: Usuario não encontrado"));
     }
 
     public void addUsuario(Usuario usuario) {
-        usuarios.put(usuario.getId(), usuario);
+        usuarios.save(usuario);
     }
 
     public ContaBancaria buscarConta(String chave) {
-        for (Usuario usuario: usuarios.values()) {
+        for (Usuario usuario : usuarios.findAll()) {
             ContaBancaria conta = usuario.getConta();
 
             for (TipoChavePix tipoChavePix : TipoChavePix.values()) {
@@ -34,20 +38,15 @@ public class Banco {
                     return conta;
                 }
             }
-
         }
         return null;
     }
 
     public void removerUsuario(String id) {
-        Usuario usuarioRemovido = usuarios.remove(id);
-        //como a função retorna o objeto usuario, então se o ID existia a condição == null vai ser false
-        // e a exceção não vai ser lançada e o usuario vai ser removido com sucesso "espero",
-        // mas se o ID não existe, a condição vai ser verdadeira e adaí lança
-        // a exceção
-        if(usuarioRemovido == null) {
+        if (!usuarios.existsById(id)) {
             throw new IdNaoEncontradoException("Error: Usuario não encontrado");
         }
+        usuarios.deleteById(id);
     }
 
     public Usuario cadastrarUsuario(String nome, String email, String cpf, String senha, String cnpj, String telefone) {
