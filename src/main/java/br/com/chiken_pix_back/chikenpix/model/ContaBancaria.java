@@ -2,25 +2,35 @@ package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.exception.*;
 
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 
+@Getter
+@Entity
+@Table(name = "contas_bancarias")
 public class ContaBancaria {
 
-    private @Getter final String numeroConta;
-    private @Getter final String numeroAgencia;
-    private @Getter final String codigoBanco;
-    private @Getter final String nomeBanco;
-    private @Getter double saldo;
-    private @Getter StatusConta status;
-    private final HashMap<TipoChavePix, ChavePix> chavesPix;
+    @OneToOne
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    private @Setter Usuario usuario;
+
+    @Id
+    private String numeroConta = "";
+
+    private final String numeroAgencia = "0001001";
+    private final String codigoBanco = "D022NSJZ02012";
+    private final String nomeBanco = "ChikenPIX";
+    private double saldo;
+    private StatusConta status;
+    private HashMap<TipoChavePix, ChavePix> chavesPix = null;
+
+    protected ContaBancaria(){};
 
     public ContaBancaria(String numeroConta){
         this.numeroConta = numeroConta;
-        this.numeroAgencia = "0001001";
-        this.codigoBanco = "D022NSJZ02012";
-        this.nomeBanco = "ChikenPIX";
         this.saldo = 0.00;
         this.status = StatusConta.ATIVA;
         this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
