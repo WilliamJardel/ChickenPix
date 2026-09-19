@@ -86,4 +86,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(StatusInvalidoException.class)
+    public ResponseEntity<String> tratarStatusInvalido(StatusInvalidoException exception) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
 }
