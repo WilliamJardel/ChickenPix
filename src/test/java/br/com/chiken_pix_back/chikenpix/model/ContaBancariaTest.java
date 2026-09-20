@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.ChavePixJaCadastradaException;
 
 import org.junit.jupiter.api.Test;
@@ -14,30 +15,27 @@ public class ContaBancariaTest {
     @DisplayName("Deve cadastrar Chave Pix do tipo Email na Conta Bancaria")
     void deveCadastrarChaveEmail(){
         ContaBancaria contaDaniel = new ContaBancaria("12345");
-        ChaveEmail chave = new ChaveEmail("daniel@gmail.com");
 
-        contaDaniel.addChavePix(TipoChavePix.EMAIL, chave);
+        contaDaniel.addChavePix(TipoChavePix.EMAIL, "daniel@gmail.com");
 
         ChavePix chaveEncontrada = contaDaniel.buscarChavePix(TipoChavePix.EMAIL);
 
         assertThat(chaveEncontrada).isNotNull();
         assertThat(chaveEncontrada.getChave()).isEqualTo("daniel@gmail.com");
         assertThat(chaveEncontrada.getTipoChave()).isEqualTo(TipoChavePix.EMAIL);
-
     }
 
     @Test
     @DisplayName("Deve gerar e cadastrar chave Pix aleatória na Conta Bancaria")
     void deveCadastrarChaveAleatoria(){
         ContaBancaria contaDaniel = new ContaBancaria("12345");
-        ChaveAleatoria chave = new ChaveAleatoria();
 
-        contaDaniel.addChavePix(TipoChavePix.ALEATORIA, chave);
+        ChavePix chaveGerada = contaDaniel.gerarChaveAleatoria();
 
         ChavePix chaveEncontrada = contaDaniel.buscarChavePix(TipoChavePix.ALEATORIA);
 
         assertThat(chaveEncontrada).isNotNull();
-        assertThat(chaveEncontrada.getChave()).isEqualTo(chave.getChave());
+        assertThat(chaveEncontrada.getChave()).isEqualTo(chaveGerada.getChave());
         assertThat(chaveEncontrada.getTipoChave()).isEqualTo(TipoChavePix.ALEATORIA);
     }
 
@@ -46,16 +44,10 @@ public class ContaBancariaTest {
 
         ContaBancaria contaDaniel = new ContaBancaria("12345");
 
-        ChaveEmail primeiraChave =
-                new ChaveEmail("daniel1@gmail.com");
-
-        ChaveEmail segundaChave =
-                new ChaveEmail("daniel2@gmail.com");
-
-        contaDaniel.addChavePix(TipoChavePix.EMAIL, primeiraChave);
+        contaDaniel.addChavePix(TipoChavePix.EMAIL, "daniel1@gmail.com");
 
         assertThatThrownBy(
-                () -> contaDaniel.addChavePix(TipoChavePix.EMAIL, segundaChave)
+                () -> contaDaniel.addChavePix(TipoChavePix.EMAIL, "daniel2@gmail.com")
         )
                 .isInstanceOf(ChavePixJaCadastradaException.class)
                 .hasMessageContaining("Error: Chave Pix já cadastrada.");
