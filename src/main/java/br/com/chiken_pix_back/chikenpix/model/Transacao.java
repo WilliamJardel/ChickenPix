@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-@Table(name = "transacao")
+@Table(name = "transacoes")
 public class Transacao {
 
     @Id
@@ -25,14 +25,15 @@ public class Transacao {
     @Enumerated(EnumType.STRING)
     private StatusTransacao status;
 
+    @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
     @ManyToOne
-    @JoinColumn(name = "conta_origem_id")
+    @JoinColumn(name = "origem_conta_id")
     private ContaBancaria origem;
 
     @ManyToOne
-    @JoinColumn(name = "conta_destino_id")
+    @JoinColumn(name = "destino_conta_id")
     private ContaBancaria destino;
 
     protected Transacao() {}
