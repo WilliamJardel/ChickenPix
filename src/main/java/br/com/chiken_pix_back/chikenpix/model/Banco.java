@@ -9,8 +9,6 @@ import br.com.chiken_pix_back.chikenpix.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
@@ -82,19 +80,24 @@ public class Banco {
         return usuario;
     }
 
-    public List<Transacao> listarTransacoes() {
-        return transacoes.findAll();
-    }
-
-    public List<Transacao> filtrarTransacoesPorData(LocalDateTime inicio, LocalDateTime fim) {
-        if (inicio.isAfter(fim)) {
-            throw new IllegalArgumentException("Data inicial não pode ser depois da data final.");
+    public void realizarPix(ContaBancaria origem, String chaveDestino, BigDecimal valor) {
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new ValorPixInvalidoException("Error: Valor inválido para realizar Pix.");
         }
-        return transacoes.findByDataHoraBetween(inicio, fim);
-    }
 
-    public ContaBancaria consultarConta(String numeroConta) {
-        return contas.findById(numeroConta)
-                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
+        ContaBancaria destino = buscarConta(chaveDestino);
+        if (destino == null) {
+            throw new ChaveNaoEncontradaException("Error: Chave Pix de destino não encontrada.");
+        }
+
+        origem.debitar(valor);
+        destino.creditar(valor);
+
+        contas.save(origem);
+        contas.save(destino);
+
+        Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
+        transacao.concluir();
+        transacoes.save(transacao);
     }
 }
