@@ -1,9 +1,12 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.enumerations.StatusTransacao;
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoTransacao;
 import br.com.chiken_pix_back.chikenpix.exception.StatusInvalidoException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -20,15 +23,16 @@ public class TransacaoTest {
         Transacao transacao = new Transacao(
                 origem,
                 destino,
-                100.00
+                BigDecimal.valueOf(100.00),
+                TipoTransacao.PIX_ENVIADO
         );
 
         assertThat(transacao).isNotNull();
         assertThat(transacao.getId()).isNotNull();
         assertThat(transacao.getOrigem()).isEqualTo(origem);
         assertThat(transacao.getDestino()).isEqualTo(destino);
-        assertThat(transacao.getValor()).isEqualTo(100.00);
-        assertThat(transacao.getDateHora()).isNotNull();
+        assertThat(transacao.getValor()).isEqualByComparingTo(BigDecimal.valueOf(100.00));
+        assertThat(transacao.getDataHora()).isNotNull();
         assertThat(transacao.getStatus())
                 .isEqualTo(StatusTransacao.PENDENTE);
     }
@@ -42,7 +46,8 @@ public class TransacaoTest {
         Transacao transacao = new Transacao(
                 origem,
                 destino,
-                100.00
+                BigDecimal.valueOf(100.00),
+                TipoTransacao.PIX_ENVIADO
         );
 
         transacao.concluir();
@@ -61,7 +66,8 @@ public class TransacaoTest {
         Transacao transacao = new Transacao(
                 origem,
                 destino,
-                100.00
+                BigDecimal.valueOf(100.00),
+                TipoTransacao.PIX_ENVIADO
         );
 
         transacao.cancelar();
@@ -80,7 +86,8 @@ public class TransacaoTest {
         Transacao transacao = new Transacao(
                 origem,
                 destino,
-                100.00
+                BigDecimal.valueOf(100.00),
+                TipoTransacao.PIX_ENVIADO
         );
 
         transacao.concluir();

@@ -1,24 +1,30 @@
 package br.com.chiken_pix_back.chikenpix.model;
+
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.SenhaInvalidaException;
 import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
+import br.com.chiken_pix_back.chikenpix.repository.ChavePixRepository;
+import br.com.chiken_pix_back.chikenpix.repository.ContaBancariaRepository;
+import br.com.chiken_pix_back.chikenpix.repository.TransacaoRepository;
+import br.com.chiken_pix_back.chikenpix.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mock;
 
 public class UsuarioTest {
     @Test
     @DisplayName("Crie um usuário com ID e Conta")
     void crieUsuarioSucesso() {
-        Usuario usuario = new Usuario("Nay Dantas", "nay@gmail.com", "123.45.234-78", "Nay123", null, "88999998888");
+        Usuario usuario = new Usuario("Nay Dantas", "nay@gmail.com", "123.445.234-78", "Nay123", null, "88999998888");
 
         assertThat(usuario.getId()).isNotNull();
         assertThat(usuario.getConta()).isNotNull();
-       // assertThat(usuario.getConta().getId()).isNotNull();
+        // assertThat(usuario.getConta().getId()).isNotNull();
         assertThat(usuario.getNome()).isEqualTo("Nay Dantas");
     }
 
@@ -56,7 +62,12 @@ public class UsuarioTest {
     @Test
     @DisplayName("Deve lançar excessão com telefone inválido")
     void deveLancarExcessaoTelefoneInvalido(){
-        Banco banco = new Banco();
+        Banco banco = new Banco(
+                mock(UserRepository.class),
+                mock(ContaBancariaRepository.class),
+                mock(ChavePixRepository.class),
+                mock(TransacaoRepository.class)
+        );
         assertThatThrownBy(
                 () -> banco.cadastrarUsuario(
                         "Haroldinho",
@@ -73,7 +84,12 @@ public class UsuarioTest {
     @Test
     @DisplayName("deve lançar excessao com CPF inválido")
     void deveLancarExcessaoCPFInvalido(){
-        Banco banco = new Banco();
+        Banco banco = new Banco(
+                mock(UserRepository.class),
+                mock(ContaBancariaRepository.class),
+                mock(ChavePixRepository.class),
+                mock(TransacaoRepository.class)
+        );
         assertThatThrownBy(
                 () -> banco.cadastrarUsuario(
                         "Haroldinho",
@@ -87,4 +103,3 @@ public class UsuarioTest {
                 .isInstanceOf(CPFInvalidoException.class);
     }
 }
-

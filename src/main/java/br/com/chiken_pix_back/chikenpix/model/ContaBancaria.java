@@ -61,7 +61,7 @@ public class ContaBancaria {
         if (this.status == StatusConta.DESATIVADA) {
             throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
-        if (this.saldo.compareTo(valor) > 0) {
+        if (this.saldo.compareTo(valor) <= 0) {
             throw new SaldoInsuficienteException("Error: Saldo insuficiente para realizar Pix.");
         }
         this.saldo = this.saldo.subtract(valor);
