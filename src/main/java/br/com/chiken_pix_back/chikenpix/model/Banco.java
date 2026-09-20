@@ -100,4 +100,9 @@ public class Banco {
         transacao.concluir();
         transacoes.save(transacao);
     }
+
+    public ContaBancaria consultarConta(String numeroConta) {
+        return contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
+    }
 }

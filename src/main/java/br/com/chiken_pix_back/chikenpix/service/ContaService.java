@@ -18,5 +18,4 @@ public class ContaService {
         ContaBancaria conta = banco.buscarConta(numeroConta);
         return conta.getSaldo();
     }
-
 }
