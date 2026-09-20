@@ -24,6 +24,7 @@ public class ChavePix {
 
     @ManyToOne
     @JoinColumn(name = "conta_id")
+    @Getter
     private ContaBancaria contaBancaria;
 
     protected ChavePix() {}
