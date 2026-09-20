@@ -6,6 +6,7 @@ import br.com.chiken_pix_back.chikenpix.exception.StatusInvalidoException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class Transacao {
     @Id
     private String id;
 
-    private double valor;
+    private BigDecimal valor;
 
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;
@@ -38,7 +39,7 @@ public class Transacao {
 
     protected Transacao() {}
 
-    public Transacao(ContaBancaria origem, ContaBancaria destino, double valor, TipoTransacao tipo) {
+    public Transacao(ContaBancaria origem, ContaBancaria destino, BigDecimal valor, TipoTransacao tipo) {
         this.id = UUID.randomUUID().toString();
         this.origem = origem;
         this.destino = destino;
