@@ -3,6 +3,7 @@ package br.com.chiken_pix_back.chikenpix.model;
 import br.com.chiken_pix_back.chikenpix.enumerations.StatusConta;
 import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.*;
+import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,7 +29,8 @@ public class ContaBancaria {
     @Id
     private String numeroConta;
 
-    private double saldo;
+    @Column(precision = 15, scale = 2)
+    private BigDecimal saldo;
 
     @Enumerated(EnumType.STRING)
     private StatusConta status;
@@ -40,7 +42,7 @@ public class ContaBancaria {
 
     public ContaBancaria(String numeroConta) {
         this.numeroConta = numeroConta;
-        this.saldo = 0.00;
+        this.saldo = BigDecimal.ZERO;
         this.status = StatusConta.ATIVA;
     }
 
@@ -49,27 +51,27 @@ public class ContaBancaria {
     public String getNomeBanco() { return NOME_BANCO; }
 
     public void encerrarConta() {
-        if (this.saldo != 0) {
+        if (this.saldo.compareTo(BigDecimal.ZERO) != 0) {
             throw new SaldoNaoZeradoException("Erro ao encerrar conta: seu saldo não está zerado!");
         }
         this.status = StatusConta.DESATIVADA;
     }
 
-    public void debitar(double valor) {
+    public void debitar(BigDecimal valor) {
         if (this.status == StatusConta.DESATIVADA) {
             throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
-        if (this.saldo < valor) {
+        if (this.saldo.compareTo(valor) > 0) {
             throw new SaldoInsuficienteException("Error: Saldo insuficiente para realizar Pix.");
         }
-        this.saldo -= valor;
+        this.saldo = this.saldo.subtract(valor);
     }
 
-    public void creditar(double valor) {
+    public void creditar(BigDecimal valor) {
         if (this.status == StatusConta.DESATIVADA) {
             throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
-        this.saldo += valor;
+        this.saldo = this.saldo.add(valor);
     }
 
     public void addChavePix(TipoChavePix tipoChave, String valorChave) {
