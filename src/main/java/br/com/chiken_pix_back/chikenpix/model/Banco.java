@@ -46,6 +46,13 @@ public class Banco {
                 .orElse(null);
     }
 
+    public void bloquearContaPorFraude(String numeroConta) {
+        ContaBancaria conta = contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Conta bancária não encontrada."));
+        conta.bloquearPorSuspeitaDeFraude();
+        contas.save(conta);
+    }
+
     public void removerUsuario(String id) {
         if (!usuarios.existsById(id)) {
             throw new IdNaoEncontradoException("Error: Usuario não encontrado");
@@ -91,7 +98,11 @@ public class Banco {
         }
 
         origem.debitar(valor);
-        destino.creditar(valor);
+        try {
+            destino.creditar(valor);
+        } catch (ContaBloqueadaSuspeitaFraudeException e) {
+            throw new IllegalArgumentException("Error: Não foi possível concluir o Pix. A conta de destino possui restrições para recebimento.");
+        }
 
         contas.save(origem);
         contas.save(destino);
