@@ -1,7 +1,10 @@
 package br.com.chiken_pix_back.chikenpix.service;
 
 import br.com.chiken_pix_back.chikenpix.model.Banco;
+import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @Service
 public class ContaService {
@@ -11,5 +14,9 @@ public class ContaService {
         this.banco = banco;
     }
 
+    public BigDecimal consultarSaldo(String numeroConta){
+        ContaBancaria conta = banco.buscarConta(numeroConta);
+        return conta.getSaldo();
+    }
 
 }
