@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.StatusConta;
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.*;
 
 import jakarta.persistence.*;

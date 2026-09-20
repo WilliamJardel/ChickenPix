@@ -1,5 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.StatusTransacao;
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoTransacao;
 import br.com.chiken_pix_back.chikenpix.exception.StatusInvalidoException;
 import jakarta.persistence.*;
 import lombok.Getter;

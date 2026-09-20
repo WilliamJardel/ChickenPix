@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.CNPJInvalidoException;
 
 import org.junit.jupiter.api.Test;

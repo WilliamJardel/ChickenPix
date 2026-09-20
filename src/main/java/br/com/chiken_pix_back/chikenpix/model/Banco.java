@@ -1,10 +1,9 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;

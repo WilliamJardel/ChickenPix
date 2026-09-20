@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import jakarta.persistence.*;
 import lombok.Getter;
 import java.util.UUID;
