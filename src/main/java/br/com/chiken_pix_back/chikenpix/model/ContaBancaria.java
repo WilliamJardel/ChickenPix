@@ -6,92 +6,104 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Entity
 @Table(name = "contas_bancarias")
 public class ContaBancaria {
 
+    private static final String NUMERO_AGENCIA = "0001001";
+    private static final String CODIGO_BANCO = "D022NSJZ02012";
+    private static final String NOME_BANCO = "ChikenPIX";
+
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private @Setter Usuario usuario;
 
     @Id
-    private String numeroConta = "";
+    private String numeroConta;
 
-    private final String numeroAgencia = "0001001";
-    private final String codigoBanco = "D022NSJZ02012";
-    private final String nomeBanco = "ChikenPIX";
     private double saldo;
+
+    @Enumerated(EnumType.STRING)
     private StatusConta status;
-    private HashMap<TipoChavePix, ChavePix> chavesPix = null;
 
-    protected ContaBancaria(){};
+    @OneToMany(mappedBy = "contaBancaria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChavePix> chavesPix = new ArrayList<>();
 
-    public ContaBancaria(String numeroConta){
+    protected ContaBancaria() {}
+
+    public ContaBancaria(String numeroConta) {
         this.numeroConta = numeroConta;
         this.saldo = 0.00;
         this.status = StatusConta.ATIVA;
-        this.chavesPix = new HashMap<TipoChavePix, ChavePix>(5);
     }
 
+    public String getNumeroAgencia() { return NUMERO_AGENCIA; }
+    public String getCodigoBanco() { return CODIGO_BANCO; }
+    public String getNomeBanco() { return NOME_BANCO; }
+
     public void encerrarConta() {
-        if(this.saldo != 0){
+        if (this.saldo != 0) {
             throw new SaldoNaoZeradoException("Erro ao encerrar conta: seu saldo não está zerado!");
         }
         this.status = StatusConta.DESATIVADA;
     }
 
     public void debitar(double valor) {
-        if (this.status == StatusConta.DESATIVADA){
-            throw new ContaDesativadaException(
-              "Error: Conta Desativada, operação falhou."
-            );
+        if (this.status == StatusConta.DESATIVADA) {
+            throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
-
-        if (getSaldo() < valor){
-            throw new SaldoInsuficienteException(
-                    "Error: Saldo insuficiente para realizar Pix."
-            );
+        if (this.saldo < valor) {
+            throw new SaldoInsuficienteException("Error: Saldo insuficiente para realizar Pix.");
         }
-
         this.saldo -= valor;
     }
 
-    public void creditar(double valor){
-        if (this.status == StatusConta.DESATIVADA){
-            throw new ContaDesativadaException(
-                    "Error: Conta Desativada, operação falhou."
-            );
+    public void creditar(double valor) {
+        if (this.status == StatusConta.DESATIVADA) {
+            throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
         this.saldo += valor;
     }
 
-    public void addChavePix(TipoChavePix tipoChave, ChavePix chave) {
-        if (buscarChavePix(tipoChave) != null){
-            throw new ChavePixJaCadastradaException(
-                    "Error: Chave Pix já cadastrada."
-            );
+    public void addChavePix(TipoChavePix tipoChave, String valorChave) {
+        if (tipoChave == TipoChavePix.ALEATORIA) {
+            throw new IllegalArgumentException("Use gerarChaveAleatoria() para chaves do tipo ALEATORIA.");
         }
-        chave.validar();
-        this.chavesPix.put(tipoChave, chave);
+        if (buscarChavePix(tipoChave) != null) {
+            throw new ChavePixJaCadastradaException("Error: Chave Pix já cadastrada.");
+        }
+        ChavePixValidation.validar(tipoChave, valorChave);
+        chavesPix.add(new ChavePix(tipoChave, valorChave, this));
     }
 
-    public ChavePix buscarChavePix(TipoChavePix tipoChave){
-        return chavesPix.get(tipoChave);
+    public ChavePix buscarChavePix(TipoChavePix tipoChave) {
+        return chavesPix.stream()
+                .filter(c -> c.getTipoChave() == tipoChave)
+                .findFirst()
+                .orElse(null);
     }
 
     public ChavePix rmChavePix(TipoChavePix tipoChave) {
         ChavePix rmChave = buscarChavePix(tipoChave);
-        if(rmChave == null) {
-            throw new ChaveNaoEncontradaException(
-                    "Error: Chave Pix não encontrada."
-            );
+        if (rmChave == null) {
+            throw new ChaveNaoEncontradaException("Error: Chave Pix não encontrada.");
         }
-
-        this.chavesPix.remove(tipoChave);
+        chavesPix.remove(rmChave);
         return rmChave;
     }
 
+    public ChavePix gerarChaveAleatoria() {
+        if (buscarChavePix(TipoChavePix.ALEATORIA) != null) {
+            throw new ChavePixJaCadastradaException("Esta conta já possui uma chave aleatória.");
+        }
+        String chaveGerada = UUID.randomUUID().toString();
+        ChavePix novaChave = new ChavePix(TipoChavePix.ALEATORIA, chaveGerada, this);
+        chavesPix.add(novaChave);
+        return novaChave;
+    }
 }

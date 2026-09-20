@@ -5,6 +5,7 @@ import br.com.chiken_pix_back.chikenpix.exception.CNPJInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.EmailInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.TelefoneInvalidoException;
+import org.jspecify.annotations.NonNull;
 
 public class ChavePixValidation{
 
@@ -20,38 +21,32 @@ public class ChavePixValidation{
             case CNPJ -> validarCnpj(valor);
             case EMAIL -> validarEmail(valor);
             case TELEFONE -> validarTelefone(valor);
-            case ALEATORIA -> validarAleatoria(valor);
+            case ALEATORIA -> throw new IllegalStateException(
+                    "Chave aleatória não deve passar por validação manual — use gerarChaveAleatoria().");
         }
     }
 
-    private static void validarCpf(String valor) {
+    private static void validarCpf(@NonNull String valor) {
         if (!valor.trim().matches("^(\\d{11}|\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2})$")) {
             throw new CPFInvalidoException("CPF inválido para chave Pix.");
         }
     }
 
-    private static void validarCnpj(String valor) {
+    private static void validarCnpj(@NonNull String valor) {
         if (!valor.trim().matches("^(\\d{14}|\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2})$")) {
             throw new CNPJInvalidoException("CNPJ inválido para chave Pix.");
         }
     }
 
-    private static void validarEmail(String valor) {
+    private static void validarEmail(@NonNull String valor) {
         if (!valor.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             throw new EmailInvalidoException("E-mail inválido para chave Pix.");
         }
     }
 
-    private static void validarTelefone(String valor) {
+    private static void validarTelefone(@NonNull String valor) {
         if (!valor.trim().matches("^\\+?\\d{10,13}$")) {
             throw new TelefoneInvalidoException("Telefone inválido para chave Pix.");
-        }
-    }
-
-    private static void validarAleatoria(String valor) {
-        String uuidRegex = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-        if (!valor.trim().matches(uuidRegex)) {
-            throw new AleatoriaInvalidaException("Chave aleatória inválida — deve ser um UUID.");
         }
     }
 }

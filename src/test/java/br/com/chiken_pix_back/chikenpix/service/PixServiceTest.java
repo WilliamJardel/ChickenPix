@@ -3,7 +3,6 @@ package br.com.chiken_pix_back.chikenpix.service;
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
 import br.com.chiken_pix_back.chikenpix.exception.SaldoInsuficienteException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
-import br.com.chiken_pix_back.chikenpix.model.ChaveEmail;
 import br.com.chiken_pix_back.chikenpix.model.Banco;
 import br.com.chiken_pix_back.chikenpix.model.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.model.Usuario;
