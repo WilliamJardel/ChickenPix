@@ -6,6 +6,8 @@ import br.com.chiken_pix_back.chikenpix.model.Banco;
 import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class PixService {
     private Banco banco;
@@ -14,9 +16,9 @@ public class PixService {
         this.banco = banco;
     }
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, double valor) {
+    public void realizarPix(ContaBancaria origem, String chaveDestino, BigDecimal valor) {
 
-        if (valor <= 0.00){
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValorPixInvalidoException(
                     "Error: Valor inválido para realizar Pix."
             );

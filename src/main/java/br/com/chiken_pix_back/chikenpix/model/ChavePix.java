@@ -1,11 +1,38 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
-public interface ChavePix {
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
+import jakarta.persistence.*;
+import lombok.Getter;
 
-    String getChave();
+@Entity
+@Table(name = "chaves_pix")
+public class ChavePix {
 
-    TipoChavePix getTipoChave();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    private Long id;
 
-    boolean validar();
+    @Column(name = "tipo")
+    @Enumerated(EnumType.STRING)
+    @Getter
+    private TipoChavePix tipoChave;
 
+    @Column(name = "chave")
+    @Getter
+    private String chave;
+
+    @ManyToOne
+    @JoinColumn(name = "conta_id")
+    @Getter
+    private ContaBancaria contaBancaria;
+
+    protected ChavePix() {}
+
+    public ChavePix(TipoChavePix tipoChave, String chave, ContaBancaria contaBancaria) {
+        this.tipoChave = tipoChave;
+        this.chave = chave;
+        this.contaBancaria = contaBancaria;
+        // sem gerar id manualmente — o banco gera sozinho (BIGSERIAL)
+    }
 }
