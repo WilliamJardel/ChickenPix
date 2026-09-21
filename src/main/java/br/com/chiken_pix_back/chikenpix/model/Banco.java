@@ -80,26 +80,6 @@ public class Banco {
         return usuario;
     }
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, BigDecimal valor) {
-        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ValorPixInvalidoException("Error: Valor inválido para realizar Pix.");
-        }
-
-        ContaBancaria destino = buscarConta(chaveDestino);
-        if (destino == null) {
-            throw new ChaveNaoEncontradaException("Error: Chave Pix de destino não encontrada.");
-        }
-
-        origem.debitar(valor);
-        destino.creditar(valor);
-
-        contas.save(origem);
-        contas.save(destino);
-
-        Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
-        transacao.concluir();
-        transacoes.save(transacao);
-    }
 
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
