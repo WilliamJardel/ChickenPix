@@ -93,4 +93,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(ContaBloqueadaSuspeitaFraudeException.class)
+    public ResponseEntity<String> ContaBloqueadaSuspeitaFraude(ContaBloqueadaSuspeitaFraudeException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(SenhaPixIncorretaException.class)
+    public ResponseEntity<String> SenhaPixIncorreta(SenhaPixIncorretaException exception) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(exception.getMessage());
+    }
 }
