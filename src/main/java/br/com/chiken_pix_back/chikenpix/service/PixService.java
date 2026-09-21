@@ -21,7 +21,7 @@ public class PixService {
 
     private final Map<String, Integer> tentativasSenha = new ConcurrentHashMap<>();
 
-    public PixService(Banco banco) {
+    public PixService(Banco banco){
         this.banco = banco;
     }
 
