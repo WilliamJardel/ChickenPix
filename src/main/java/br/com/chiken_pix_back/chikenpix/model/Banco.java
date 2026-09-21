@@ -9,6 +9,8 @@ import br.com.chiken_pix_back.chikenpix.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
@@ -80,6 +82,16 @@ public class Banco {
         return usuario;
     }
 
+    public List<Transacao> listarTransacoes() {
+        return transacoes.findAll();
+    }
+
+    public List<Transacao> filtrarTransacoesPorData(LocalDateTime inicio, LocalDateTime fim) {
+        if (inicio.isAfter(fim)) {
+            throw new IllegalArgumentException("Data inicial não pode ser depois da data final.");
+        }
+        return transacoes.findByDataHoraBetween(inicio, fim);
+    }
 
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
