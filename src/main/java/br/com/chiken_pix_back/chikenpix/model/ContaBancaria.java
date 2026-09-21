@@ -4,6 +4,7 @@ import br.com.chiken_pix_back.chikenpix.enumerations.StatusConta;
 import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.*;
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class ContaBancaria {
 
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    @JsonBackReference
     private @Setter Usuario usuario;
 
     @Id
