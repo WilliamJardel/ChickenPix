@@ -18,9 +18,14 @@ import java.util.UUID;
 @Table(name = "contas_bancarias")
 public class ContaBancaria {
 
-    private static final String NUMERO_AGENCIA = "0001001";
-    private static final String CODIGO_BANCO = "D022NSJZ02012";
-    private static final String NOME_BANCO = "ChikenPIX";
+    @Column(name = "numero_agencia")
+    private String numeroAgencia;
+
+    @Column(name = "codigo_banco")
+    private String codigoBanco;
+
+    @Column(name = "nome_banco")
+    private String nomeBanco;
 
     @OneToOne
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
@@ -42,13 +47,12 @@ public class ContaBancaria {
 
     public ContaBancaria(String numeroConta) {
         this.numeroConta = numeroConta;
+        this.numeroAgencia = "0001001";
+        this.codigoBanco = "D022NSJZ02012";
+        this.nomeBanco = "ChikenPIX";
         this.saldo = BigDecimal.ZERO;
         this.status = StatusConta.ATIVA;
     }
-
-    public String getNumeroAgencia() { return NUMERO_AGENCIA; }
-    public String getCodigoBanco() { return CODIGO_BANCO; }
-    public String getNomeBanco() { return NOME_BANCO; }
 
     public void encerrarConta() {
         if (this.saldo.compareTo(BigDecimal.ZERO) != 0) {
