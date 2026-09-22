@@ -7,10 +7,10 @@ import br.com.chiken_pix_back.chikenpix.repository.ContaBancariaRepository;
 import br.com.chiken_pix_back.chikenpix.repository.TransacaoRepository;
 import br.com.chiken_pix_back.chikenpix.repository.UserRepository;
 import org.springframework.stereotype.Component;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
@@ -48,6 +48,13 @@ public class Banco {
                 .orElse(null);
     }
 
+    public void bloquearContaPorFraude(String numeroConta) {
+        ContaBancaria conta = contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Conta bancária não encontrada."));
+        conta.bloquearPorSuspeitaDeFraude();
+        contas.save(conta);
+    }
+
     public void removerUsuario(String id) {
         if (!usuarios.existsById(id)) {
             throw new IdNaoEncontradoException("Error: Usuario não encontrado");
@@ -82,6 +89,22 @@ public class Banco {
         return usuario;
     }
 
+    public List<Transacao> listarTransacoes() {
+        return transacoes.findAll();
+    }
+
+    public List<Transacao> filtrarTransacoesPorData(LocalDateTime inicio, LocalDateTime fim) {
+        if (inicio.isAfter(fim)) {
+            throw new IllegalArgumentException("Data inicial não pode ser depois da data final.");
+        }
+        return transacoes.findByDataHoraBetween(inicio, fim);
+    }
+
+    public ContaBancaria consultarConta(String numeroConta) {
+        return contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
+    }
+
     public void realizarPix(ContaBancaria origem, String chaveDestino, BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new ValorPixInvalidoException("Error: Valor inválido para realizar Pix.");
@@ -93,7 +116,11 @@ public class Banco {
         }
 
         origem.debitar(valor);
-        destino.creditar(valor);
+        try {
+            destino.creditar(valor);
+        } catch (ContaBloqueadaSuspeitaFraudeException e) {
+            throw new IllegalArgumentException("Error: Não foi possível concluir o Pix. A conta de destino possui restrições para recebimento.");
+        }
 
         contas.save(origem);
         contas.save(destino);
