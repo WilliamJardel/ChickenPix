@@ -1,5 +1,6 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.StatusTransacao;
 import br.com.chiken_pix_back.chikenpix.enumerations.TipoTransacao;
 import br.com.chiken_pix_back.chikenpix.exception.*;
 import br.com.chiken_pix_back.chikenpix.repository.ChavePixRepository;
@@ -89,6 +90,36 @@ public class Banco {
         return usuario;
     }
 
+    public void addTransacao(Transacao transacao){
+        transacoes.save(transacao);
+    }
+
+    public Transacao buscarTransacao(String id) {
+        return transacoes.findById(id)
+                .orElseThrow(() ->
+                        new IdNaoEncontradoException(
+                                "Transação não encontrada"
+                        ));
+    }
+
+    public void cancelarTransacao(String id) {
+        Transacao transacao = buscarTransacao(id);
+
+        transacao.cancelar();
+
+        transacoes.save(transacao);
+    }
+
+    public void concluirTransacao(String id){
+        Transacao transacao = buscarTransacao(id);
+
+        transacao.getOrigem().debitar(transacao.getValor());
+        transacao.getDestino().creditar(transacao.getValor());
+
+        transacao.concluir();
+        transacoes.save(transacao);
+    }
+
     public List<Transacao> listarTransacoes() {
         return transacoes.findAll();
     }
@@ -103,7 +134,7 @@ public class Banco {
 
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
-                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
+                .orElseThrow(() -> new IdNaoEncontradoException("Conta não encontrada"));
     }
 
     public List<Transacao> consultarNotificacoes(String numeroConta) {
