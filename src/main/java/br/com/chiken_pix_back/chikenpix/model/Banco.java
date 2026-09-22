@@ -7,6 +7,8 @@ import br.com.chiken_pix_back.chikenpix.repository.ContaBancariaRepository;
 import br.com.chiken_pix_back.chikenpix.repository.TransacaoRepository;
 import br.com.chiken_pix_back.chikenpix.repository.UserRepository;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import java.math.BigDecimal;
 
@@ -99,5 +101,24 @@ public class Banco {
         Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
         transacao.concluir();
         transacoes.save(transacao);
+    }
+
+    public RelatorioTransacoes gerarRelatorioTransacoes(String numeroConta, LocalDateTime inicio, LocalDateTime fim) {
+        ContaBancaria conta = contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta bancária não encontrada."));
+
+        List<Transacao> extrato = transacoes.findByOrigemOrDestinoAndDataHoraBetween(conta, conta, inicio, fim);
+
+        BigDecimal totalEnviado = extrato.stream()
+                .filter(t -> t.getOrigem().getNumeroConta().equals(numeroConta))
+                .map(Transacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalRecebido = extrato.stream()
+                .filter(t -> t.getDestino().getNumeroConta().equals(numeroConta))
+                .map(Transacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return new RelatorioTransacoes(extrato, totalEnviado, totalRecebido, extrato.size());
     }
 }
