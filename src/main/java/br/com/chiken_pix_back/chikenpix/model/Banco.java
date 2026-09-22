@@ -82,6 +82,10 @@ public class Banco {
         return usuario;
     }
 
+    public void addTransacao(Transacao transacao){
+        transacoes.save(transacao);
+    }
+
     public List<Transacao> listarTransacoes() {
         return transacoes.findAll();
     }
