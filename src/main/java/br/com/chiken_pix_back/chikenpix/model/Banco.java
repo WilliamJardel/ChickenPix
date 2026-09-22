@@ -148,4 +148,11 @@ public class Banco {
         }
         return transacoes.findByOrigemOrDestinoOrderByDataHoraDesc(conta, conta);
     }
+  
+    public List<Transacao> gerarRelatorioPorPeriodo(ContaBancaria conta, LocalDateTime inicio, LocalDateTime fim) {
+        if (conta == null || inicio == null || fim == null) {
+            throw new IllegalArgumentException("Error: Parâmetros de busca por período não podem ser nulos.");
+        }
+        return transacoes.findByOrigemOrDestinoAndDataHoraBetween(conta, conta, inicio, fim);
+    }
 }
