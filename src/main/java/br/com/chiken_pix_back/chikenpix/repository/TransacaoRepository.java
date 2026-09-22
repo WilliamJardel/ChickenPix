@@ -8,4 +8,7 @@ import java.util.List;
 
 public interface TransacaoRepository extends JpaRepository<Transacao, String>{
     List<Transacao> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim);
+
+    List<Transacao> findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(
+            String numeroContaOrigem, String numeroContaDestino);
 }
