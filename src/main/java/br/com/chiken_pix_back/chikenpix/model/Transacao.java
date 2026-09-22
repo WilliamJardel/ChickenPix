@@ -50,6 +50,12 @@ public class Transacao {
     }
 
     public void concluir() {
+        if (this.status != StatusTransacao.PENDENTE) {
+            throw new StatusInvalidoException(
+                    "Somente transações pendentes podem ser concluídas!"
+            );
+        }
+
         this.status = StatusTransacao.CONCLUIDA;
     }
 
