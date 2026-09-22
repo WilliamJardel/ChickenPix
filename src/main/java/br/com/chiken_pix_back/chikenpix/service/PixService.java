@@ -61,7 +61,6 @@ public class PixService {
     }
 
     private void validarSenha(ContaBancaria conta, String senhaDigitada) {
-
         String senhaCorreta = conta.getUsuario().getSenha();
 
         if (senhaDigitada == null || !senhaDigitada.equals(senhaCorreta)) {
