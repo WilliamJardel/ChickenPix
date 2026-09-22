@@ -67,7 +67,10 @@ public class ContaBancaria {
         if (this.status == StatusConta.DESATIVADA) {
             throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
         }
-        if (this.saldo.compareTo(valor) <= 0) {
+        if (this.status == StatusConta.BLOQUEADA_FRAUDE) {
+            throw new ContaBloqueadaSuspeitaFraudeException("Error: Conta bloqueada por suspeita de fraude. Operação não permitida.");
+        }
+        if (this.saldo.compareTo(valor) < 0) {
             throw new SaldoInsuficienteException("Error: Saldo insuficiente para realizar Pix.");
         }
         this.saldo = this.saldo.subtract(valor);
@@ -76,6 +79,10 @@ public class ContaBancaria {
     public void creditar(BigDecimal valor) {
         if (this.status == StatusConta.DESATIVADA) {
             throw new ContaDesativadaException("Error: Conta Desativada, operação falhou.");
+        }
+
+        if (this.status == StatusConta.BLOQUEADA_FRAUDE) {
+            throw new ContaBloqueadaSuspeitaFraudeException("Error: Conta bloqueada por suspeita de fraude. Operação não permitida.");
         }
         this.saldo = this.saldo.add(valor);
     }
@@ -115,5 +122,9 @@ public class ContaBancaria {
         ChavePix novaChave = new ChavePix(TipoChavePix.ALEATORIA, chaveGerada, this);
         chavesPix.add(novaChave);
         return novaChave;
+    }
+
+    public void bloquearPorSuspeitaDeFraude() {
+        this.status = StatusConta.BLOQUEADA_FRAUDE;
     }
 }

@@ -1,11 +1,15 @@
 package br.com.chiken_pix_back.chikenpix.service;
 
+import br.com.chiken_pix_back.chikenpix.enumerations.StatusConta;
 import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
 import br.com.chiken_pix_back.chikenpix.exception.ChaveNaoEncontradaException;
+import br.com.chiken_pix_back.chikenpix.exception.ContaBloqueadaSuspeitaFraudeException;
 import br.com.chiken_pix_back.chikenpix.exception.SaldoInsuficienteException;
+import br.com.chiken_pix_back.chikenpix.exception.SenhaPixIncorretaException;
 import br.com.chiken_pix_back.chikenpix.exception.ValorPixInvalidoException;
 import br.com.chiken_pix_back.chikenpix.model.Banco;
 import br.com.chiken_pix_back.chikenpix.model.ChavePix;
+import br.com.chiken_pix_back.chikenpix.model.ContaBancaria;
 import br.com.chiken_pix_back.chikenpix.model.Usuario;
 import br.com.chiken_pix_back.chikenpix.repository.ChavePixRepository;
 import br.com.chiken_pix_back.chikenpix.repository.ContaBancariaRepository;
@@ -35,10 +39,12 @@ public class PixServiceTest {
     private ChavePixRepository chaves;
 
     private final Map<String, Usuario> usuariosDb = new HashMap<>();
+    private final Map<String, ContaBancaria> contasDb = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         usuariosDb.clear();
+        contasDb.clear();
 
         UserRepository usuarios = mock(UserRepository.class);
         ContaBancariaRepository contas = mock(ContaBancariaRepository.class);
@@ -53,6 +59,15 @@ public class PixServiceTest {
         when(usuarios.findById(anyString())).thenAnswer(invocation ->
                 Optional.ofNullable(usuariosDb.get((String) invocation.getArgument(0))));
 
+        // Necessário para o bloquearContaPorFraude, que busca a conta pelo ContaBancariaRepository
+        when(contas.save(any(ContaBancaria.class))).thenAnswer(invocation -> {
+            ContaBancaria c = invocation.getArgument(0);
+            contasDb.put(c.getNumeroConta(), c);
+            return c;
+        });
+        when(contas.findById(anyString())).thenAnswer(invocation ->
+                Optional.ofNullable(contasDb.get((String) invocation.getArgument(0))));
+
         banco = new Banco(usuarios, contas, chaves, transacoes);
         pixService = new PixService(banco);
     }
@@ -63,6 +78,11 @@ public class PixServiceTest {
         destino.getConta().addChavePix(TipoChavePix.EMAIL, email);
         ChavePix chave = destino.getConta().buscarChavePix(TipoChavePix.EMAIL);
         when(chaves.findByChave(email)).thenReturn(Optional.of(chave));
+    }
+
+    // Garante que a conta de origem é encontrável pelo bloquearContaPorFraude via contas.findById
+    private void registrarContaOrigem(Usuario origem) {
+        contasDb.put(origem.getConta().getNumeroConta(), origem.getConta());
     }
 
     @Test
@@ -85,7 +105,8 @@ public class PixServiceTest {
         pixService.realizarPix(
                 usuarioAutenticadoOrigem.getConta(),
                 "camila@email.com",
-                BigDecimal.valueOf(40)
+                BigDecimal.valueOf(40),
+                "bancodedados"
         );
 
         assertThat(usuarioAutenticadoDestino.getConta().getSaldo())
@@ -115,7 +136,8 @@ public class PixServiceTest {
                 () -> pixService.realizarPix(
                         usuarioAutenticadoOrigem.getConta(),
                         "camila@email.com",
-                        BigDecimal.valueOf(-40)
+                        BigDecimal.valueOf(-40),
+                        "bancodedados"
                 )
         )
                 .isInstanceOf(ValorPixInvalidoException.class)
@@ -143,11 +165,12 @@ public class PixServiceTest {
                 () -> pixService.realizarPix(
                         usuarioAutenticadoOrigem.getConta(),
                         "camila@email.com",
-                        BigDecimal.valueOf(40)
+                        BigDecimal.valueOf(40),
+                        "bancodedados"
                 )
         )
                 .isInstanceOf(ChaveNaoEncontradaException.class)
-                .hasMessage("Error: Chave Pix não encontrada.");
+                .hasMessage("Error: Chave Pix de destino não encontrada.");
     }
 
     @Test
@@ -171,7 +194,8 @@ public class PixServiceTest {
                 () -> pixService.realizarPix(
                         usuarioAutenticadoOrigem.getConta(),
                         "camila@email.com",
-                        BigDecimal.valueOf(70)
+                        BigDecimal.valueOf(70),
+                        "bancodedados"
                 )
         )
                 .isInstanceOf(SaldoInsuficienteException.class)
@@ -198,7 +222,8 @@ public class PixServiceTest {
                 () -> pixService.realizarPix(
                         usuarioAutenticadoOrigem.getConta(),
                         "camila@email.com",
-                        BigDecimal.valueOf(40)
+                        BigDecimal.valueOf(40),
+                        "bancodedados"
                 )
         ).isInstanceOf(ChaveNaoEncontradaException.class);
 
@@ -226,7 +251,8 @@ public class PixServiceTest {
                 () -> pixService.realizarPix(
                         usuarioAutenticadoOrigem.getConta(),
                         "camila@email.com",
-                        BigDecimal.valueOf(70)
+                        BigDecimal.valueOf(70),
+                        "bancodedados"
                 )
         ).isInstanceOf(SaldoInsuficienteException.class);
 
@@ -234,5 +260,70 @@ public class PixServiceTest {
                 .isEqualByComparingTo(BigDecimal.ZERO);
         assertThat(usuarioAutenticadoOrigem.getConta().getSaldo())
                 .isEqualByComparingTo(BigDecimal.ZERO);
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao errar a senha do Pix (1ª e 2ª tentativa) sem bloquear a conta")
+    void deveLancarExcecaoComSenhaErradaSemBloquear(){
+        Usuario usuarioAutenticadoOrigem = new Usuario(
+                "Regis", "regis@email.com", "894.321.242-06",
+                "bancodedados", null, "82976099776"
+        );
+        usuarioAutenticadoOrigem.getConta().creditar(BigDecimal.valueOf(100));
+        registrarContaOrigem(usuarioAutenticadoOrigem);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(),
+                        "chave-qualquer",
+                        BigDecimal.valueOf(10),
+                        "senhaErrada"
+                )
+        ).isInstanceOf(SenhaPixIncorretaException.class);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(),
+                        "chave-qualquer",
+                        BigDecimal.valueOf(10),
+                        "senhaErrada"
+                )
+        ).isInstanceOf(SenhaPixIncorretaException.class);
+
+        // Ainda não bloqueada, só 2 tentativas
+        assertThat(usuarioAutenticadoOrigem.getConta().getStatus())
+                .isNotEqualTo(StatusConta.BLOQUEADA_FRAUDE);
+    }
+
+    @Test
+    @DisplayName("Deve bloquear a conta por suspeita de fraude na 3ª tentativa de senha incorreta")
+    void deveBloquearContaNaTerceiraTentativaDeSenhaErrada(){
+        Usuario usuarioAutenticadoOrigem = new Usuario(
+                "Regis", "regis@email.com", "894.321.242-06",
+                "bancodedados", null, "82976099776"
+        );
+        usuarioAutenticadoOrigem.getConta().creditar(BigDecimal.valueOf(100));
+        registrarContaOrigem(usuarioAutenticadoOrigem);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(), "chave-qualquer", BigDecimal.valueOf(10), "senhaErrada"
+                )
+        ).isInstanceOf(SenhaPixIncorretaException.class);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(), "chave-qualquer", BigDecimal.valueOf(10), "senhaErrada"
+                )
+        ).isInstanceOf(SenhaPixIncorretaException.class);
+
+        assertThatThrownBy(
+                () -> pixService.realizarPix(
+                        usuarioAutenticadoOrigem.getConta(), "chave-qualquer", BigDecimal.valueOf(10), "senhaErrada"
+                )
+        ).isInstanceOf(ContaBloqueadaSuspeitaFraudeException.class);
+
+        assertThat(usuarioAutenticadoOrigem.getConta().getStatus())
+                .isEqualTo(StatusConta.BLOQUEADA_FRAUDE);
     }
 }

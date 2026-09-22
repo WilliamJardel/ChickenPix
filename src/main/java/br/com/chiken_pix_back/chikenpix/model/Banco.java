@@ -49,6 +49,13 @@ public class Banco {
                 .orElse(null);
     }
 
+    public void bloquearContaPorFraude(String numeroConta) {
+        ContaBancaria conta = contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Conta bancária não encontrada."));
+        conta.bloquearPorSuspeitaDeFraude();
+        contas.save(conta);
+    }
+
     public void removerUsuario(String id) {
         if (!usuarios.existsById(id)) {
             throw new IdNaoEncontradoException("Error: Usuario não encontrado");
@@ -124,8 +131,14 @@ public class Banco {
         return transacoes.findByDataHoraBetween(inicio, fim);
     }
 
+
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
                 .orElseThrow(() -> new IdNaoEncontradoException("Conta não encontrada"));
+    }
+
+    public List<Transacao> consultarNotificacoes(String numeroConta) {
+        consultarConta(numeroConta);
+        return transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(numeroConta, numeroConta);
     }
 }
