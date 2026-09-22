@@ -29,4 +29,9 @@ public class TransacaoController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fim) {
         return banco.filtrarTransacoesPorData(inicio, fim);
     }
+
+    @PatchMapping("/{id}/cancelar")
+    public void cancelarTransacao(@PathVariable String id) {
+        banco.cancelarTransacao(id);
+    }
 }
