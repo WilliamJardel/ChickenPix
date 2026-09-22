@@ -49,13 +49,6 @@ public class Banco {
                 .orElse(null);
     }
 
-    public void bloquearContaPorFraude(String numeroConta) {
-        ContaBancaria conta = contas.findById(numeroConta)
-                .orElseThrow(() -> new IdNaoEncontradoException("Conta bancária não encontrada."));
-        conta.bloquearPorSuspeitaDeFraude();
-        contas.save(conta);
-    }
-
     public void removerUsuario(String id) {
         if (!usuarios.existsById(id)) {
             throw new IdNaoEncontradoException("Error: Usuario não encontrado");
@@ -116,6 +109,7 @@ public class Banco {
         transacao.getOrigem().debitar(transacao.getValor());
         transacao.getDestino().creditar(transacao.getValor());
 
+        Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
         transacao.concluir();
         transacoes.save(transacao);
     }
