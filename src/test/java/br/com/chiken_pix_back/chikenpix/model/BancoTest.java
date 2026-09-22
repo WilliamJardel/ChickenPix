@@ -1,6 +1,7 @@
 package br.com.chiken_pix_back.chikenpix.model;
 
 import br.com.chiken_pix_back.chikenpix.enumerations.TipoChavePix;
+import br.com.chiken_pix_back.chikenpix.enumerations.TipoTransacao;
 import br.com.chiken_pix_back.chikenpix.exception.CPFInvalidoException;
 import br.com.chiken_pix_back.chikenpix.exception.IdNaoEncontradoException;
 import br.com.chiken_pix_back.chikenpix.repository.ChavePixRepository;
@@ -11,11 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -325,5 +328,29 @@ class BancoTest {
         ContaBancaria encontrada = banco.buscarConta(chave.getChave());
 
         assertThat(encontrada).isEqualTo(conta);
+    }
+
+    @Test
+    @DisplayName("Deve listar notificacoes (transacoes) de uma conta, mais recente primeiro")
+    void deveListarNotificacoesDaConta() {
+        Usuario usuario = banco.cadastrarUsuario(
+                "Carlos", "carlos@email.com", "946.950.340-30",
+                "Senha@123", null, "88999998888"
+        );
+
+        ContaBancaria conta = usuario.getConta();
+
+        when(contas.findById(conta.getNumeroConta())).thenReturn(Optional.of(conta));
+
+        Transacao t1 = new Transacao(conta, conta, new BigDecimal("10.00"), TipoTransacao.PIX_ENVIADO);
+        Transacao t2 = new Transacao(conta, conta, new BigDecimal("20.00"), TipoTransacao.PIX_ENVIADO);
+
+        when(transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(
+                conta.getNumeroConta(), conta.getNumeroConta()))
+                .thenReturn(List.of(t2, t1));
+
+        List<Transacao> resultado = banco.consultarNotificacoes(conta.getNumeroConta());
+
+        assertThat(resultado).containsExactly(t2, t1);
     }
 }
