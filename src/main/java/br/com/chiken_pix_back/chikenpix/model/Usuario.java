@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name = "usuarios")
@@ -21,6 +23,7 @@ public class Usuario {
     @Getter @Setter private String senha;
 
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private @Getter ContaBancaria conta;
 
     private @Getter String cnpj;
