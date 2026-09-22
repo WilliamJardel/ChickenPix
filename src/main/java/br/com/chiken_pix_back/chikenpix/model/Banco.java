@@ -142,6 +142,13 @@ public class Banco {
         return transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(numeroConta, numeroConta);
     }
 
+    public List<Transacao> gerarRelatorioPorUsuario(ContaBancaria conta) {
+        if (conta == null) {
+            throw new IllegalArgumentException("Error: Conta não pode ser nula.");
+        }
+        return transacoes.findByOrigemOrDestinoOrderByDataHoraDesc(conta, conta);
+    }
+  
     public List<Transacao> gerarRelatorioPorPeriodo(ContaBancaria conta, LocalDateTime inicio, LocalDateTime fim) {
         if (conta == null || inicio == null || fim == null) {
             throw new IllegalArgumentException("Error: Parâmetros de busca por período não podem ser nulos.");
