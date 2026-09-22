@@ -12,4 +12,5 @@ public class PixRequest {
     private String origem;
     private String chaveDestino;
     private BigDecimal valor;
+    private String senha;
 }

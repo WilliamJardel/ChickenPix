@@ -26,6 +26,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, String>{
     );
 
 
+
     List<Transacao> findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(
             String numeroContaOrigem, String numeroContaDestino);
 }

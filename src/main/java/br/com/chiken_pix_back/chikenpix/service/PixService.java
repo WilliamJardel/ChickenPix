@@ -21,7 +21,7 @@ public class PixService {
 
     private final Map<String, Integer> tentativasSenha = new ConcurrentHashMap<>();
 
-    public PixService(Banco banco) {
+    public PixService(Banco banco){
         this.banco = banco;
     }
 
@@ -61,7 +61,6 @@ public class PixService {
     }
 
     private void validarSenha(ContaBancaria conta, String senhaDigitada) {
-
         String senhaCorreta = conta.getUsuario().getSenha();
 
         if (senhaDigitada == null || !senhaDigitada.equals(senhaCorreta)) {

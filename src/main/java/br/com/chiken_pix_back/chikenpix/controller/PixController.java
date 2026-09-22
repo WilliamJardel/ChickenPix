@@ -26,7 +26,8 @@ public class PixController {
         pixService.realizarPix(
                 origem,
                 request.getChaveDestino(),
-                request.getValor()
+                request.getValor(),
+                request.getSenha()
         );
     }
 }
