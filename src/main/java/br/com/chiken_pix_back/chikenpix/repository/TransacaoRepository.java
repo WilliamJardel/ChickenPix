@@ -29,4 +29,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, String>{
 
     List<Transacao> findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(
             String numeroContaOrigem, String numeroContaDestino);
+
+    // Busca todas as transações em que a conta foi origem OU destino, ordenadas da mais recente para a mais antiga
+    List<Transacao> findByOrigemOrDestinoOrderByDataHoraDesc(ContaBancaria origem, ContaBancaria destino);
 }

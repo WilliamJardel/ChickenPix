@@ -141,4 +141,11 @@ public class Banco {
         consultarConta(numeroConta);
         return transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(numeroConta, numeroConta);
     }
+
+    public List<Transacao> gerarRelatorioPorUsuario(ContaBancaria conta) {
+        if (conta == null) {
+            throw new IllegalArgumentException("Error: Conta não pode ser nula.");
+        }
+        return transacoes.findByOrigemOrDestinoOrderByDataHoraDesc(conta, conta);
+    }
 }
