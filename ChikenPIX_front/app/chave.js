@@ -7,6 +7,9 @@ import {
   ScrollView,
   StatusBar,
   Alert,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Feather } from '@expo/vector-icons';
@@ -15,7 +18,7 @@ import { useRouter } from 'expo-router';
 export default function Chave() {
   const router = useRouter();
 
-  // Dados das chaves cadastradas (MOCK)
+  // Lista de chaves cadastradas (MOCK)
   const [chaves, setChaves] = useState([
     {
       id: '1',
@@ -31,6 +34,10 @@ export default function Chave() {
     },
   ]);
 
+  // Estados do Modal
+  const [modalVisible, setModalVisible] = useState(false);
+  const [novaChave, setNovaChave] = useState('');
+
   const fecharTela = () => {
     if (router.canGoBack()) {
       router.back();
@@ -39,8 +46,26 @@ export default function Chave() {
     }
   };
 
-  const handleRegistrarChave = () => {
-    Alert.alert('Registrar chave', 'Redirecionar para o fluxo de cadastro de nova chave Pix.');
+  // Função para cadastrar a nova chave
+  const handleSalvarChave = () => {
+    if (!novaChave.trim()) {
+      Alert.alert('Atenção', 'Por favor, insira o dado para registrar a chave.');
+      return;
+    }
+
+    const valor = novaChave.trim();
+    const ehEmail = valor.includes('@');
+
+    const novaItem = {
+      id: Date.now().toString(),
+      tipo: ehEmail ? 'E-mail' : 'Telefone / CPF',
+      valor: valor,
+      tipoIcone: ehEmail ? 'mail' : 'phone',
+    };
+
+    setChaves([novaItem, ...chaves]);
+    setNovaChave('');
+    setModalVisible(false);
   };
 
   const handleOpcoesChave = (chave) => {
@@ -49,7 +74,13 @@ export default function Chave() {
       `Chave: ${chave.valor}`,
       [
         { text: 'Copiar Chave', onPress: () => {} },
-        { text: 'Excluir Chave', style: 'destructive', onPress: () => {} },
+        { 
+          text: 'Excluir Chave', 
+          style: 'destructive', 
+          onPress: () => {
+            setChaves(chaves.filter((c) => c.id !== chave.id));
+          } 
+        },
         { text: 'Cancelar', style: 'cancel' },
       ]
     );
@@ -68,8 +99,12 @@ export default function Chave() {
         {/* Título Principal */}
         <Text style={styles.title}>Minhas chaves</Text>
 
-        {/* Linha Registrar Chave */}
-        <TouchableOpacity style={styles.registrarRow} onPress={handleRegistrarChave} activeOpacity={0.7}>
+        {/* Linha Registrar Chave (+) */}
+        <TouchableOpacity 
+          style={styles.registrarRow} 
+          onPress={() => setModalVisible(true)} 
+          activeOpacity={0.7}
+        >
           <Text style={styles.registrarTexto}>Registrar chave</Text>
           <Ionicons name="add" size={26} color="#00A88F" />
         </TouchableOpacity>
@@ -111,6 +146,58 @@ export default function Chave() {
           ))}
         </ScrollView>
       </View>
+
+      {/* MODAL BOTTOM SHEET DE REGISTRAR CHAVE */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                {/* Botão Voltar (<) */}
+                <TouchableOpacity 
+                  style={styles.modalBackButton} 
+                  onPress={() => setModalVisible(false)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="chevron-back" size={26} color="#2D2D2D" />
+                </TouchableOpacity>
+
+                {/* Título do Modal */}
+                <Text style={styles.modalTitle}>Registrar chave</Text>
+
+                {/* Subtítulo */}
+                <Text style={styles.modalSubTitle}>Insira o dado para registrar a chave</Text>
+
+                {/* Campo de Texto */}
+                <TextInput
+                  style={styles.input}
+                  placeholder="Telefone, CPF/CNPJ ou chave Pix"
+                  placeholderTextColor="#B0B0B0"
+                  value={novaChave}
+                  onChangeText={setNovaChave}
+                  autoCapitalize="none"
+                />
+
+                {/* Botão Registrar no canto direito */}
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity 
+                    style={styles.btnRegistrar} 
+                    onPress={handleSalvarChave}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.btnRegistrarTexto}>Registrar</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -184,5 +271,61 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     padding: 8,
+  },
+
+  /* Estilos do Modal */
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 40,
+    minHeight: '65%',
+  },
+  modalBackButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000000',
+    marginBottom: 32,
+  },
+  modalSubTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#000000',
+    marginBottom: 12,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+    fontSize: 16,
+    paddingVertical: 8,
+    color: '#000000',
+    marginBottom: 28,
+  },
+  buttonContainer: {
+    alignItems: 'flex-end',
+  },
+  btnRegistrar: {
+    backgroundColor: '#00A88F',
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+  },
+  btnRegistrarTexto: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
