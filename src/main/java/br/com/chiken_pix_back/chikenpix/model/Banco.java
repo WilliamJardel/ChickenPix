@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import java.math.BigDecimal;
-
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
 
@@ -118,7 +116,6 @@ public class Banco {
         transacao.getOrigem().debitar(transacao.getValor());
         transacao.getDestino().creditar(transacao.getValor());
 
-        Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
         transacao.concluir();
         transacoes.save(transacao);
     }
@@ -134,10 +131,6 @@ public class Banco {
         return transacoes.findByDataHoraBetween(inicio, fim);
     }
 
-        BigDecimal totalEnviado = extrato.stream()
-                .filter(t -> t.getOrigem().getNumeroConta().equals(numeroConta))
-                .map(Transacao::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
