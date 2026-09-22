@@ -23,7 +23,7 @@ public class PixService {
 
         validarSenha(origem, senha);
 
-        banco.realizarPix(origem, chaveDestino, valor);
+
 
         tentativasSenha.remove(origem.getNumeroConta());
     }

@@ -15,8 +15,8 @@ public interface TransacaoRepository extends JpaRepository<Transacao, String>{
     //basicamente procura todas as transações entre duas datas
 
 
-    //notação especifica pq se deixasse o Sprig buscar automaticamente o filtro não seria obedecido
-    //
+    //notação especifica pq se deixasse o Sprig buscar automaticamente o filtro não seria obdecido,
+    //então transações fora da data estipulada apareceriam no  histórico
     @Query("SELECT t FROM Transacao t WHERE (t.origem = :origem OR t.destino = :destino) AND t.dataHora BETWEEN :inicio AND :fim")
     List<Transacao> findByOrigemOrDestinoAndDataHoraBetween(
             @Param("origem") ContaBancaria origem,
@@ -24,7 +24,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, String>{
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim
     );
-    List<Transacao> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim);
+
 
     List<Transacao> findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(
             String numeroContaOrigem, String numeroContaDestino);
