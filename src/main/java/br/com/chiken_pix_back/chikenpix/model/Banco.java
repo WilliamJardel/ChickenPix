@@ -100,52 +100,14 @@ public class Banco {
         return transacoes.findByDataHoraBetween(inicio, fim);
     }
 
+
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
                 .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
     }
 
-    public void realizarPix(ContaBancaria origem, String chaveDestino, BigDecimal valor) {
-        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ValorPixInvalidoException("Error: Valor inválido para realizar Pix.");
-        }
-
-        ContaBancaria destino = buscarConta(chaveDestino);
-        if (destino == null) {
-            throw new ChaveNaoEncontradaException("Error: Chave Pix de destino não encontrada.");
-        }
-
-        origem.debitar(valor);
-        try {
-            destino.creditar(valor);
-        } catch (ContaBloqueadaSuspeitaFraudeException e) {
-            throw new IllegalArgumentException("Error: Não foi possível concluir o Pix. A conta de destino possui restrições para recebimento.");
-        }
-
-        contas.save(origem);
-        contas.save(destino);
-
-        Transacao transacao = new Transacao(origem, destino, valor, TipoTransacao.PIX_ENVIADO);
-        transacao.concluir();
-        transacoes.save(transacao);
-    }
-
-    public RelatorioTransacoes gerarRelatorioTransacoes(String numeroConta, LocalDateTime inicio, LocalDateTime fim) {
-        ContaBancaria conta = contas.findById(numeroConta)
-                .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta bancária não encontrada."));
-
-        List<Transacao> extrato = transacoes.findByOrigemOrDestinoAndDataHoraBetween(conta, conta, inicio, fim);
-
-        BigDecimal totalEnviado = extrato.stream()
-                .filter(t -> t.getOrigem().getNumeroConta().equals(numeroConta))
-                .map(Transacao::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        BigDecimal totalRecebido = extrato.stream()
-                .filter(t -> t.getDestino().getNumeroConta().equals(numeroConta))
-                .map(Transacao::getValor)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return new RelatorioTransacoes(extrato, totalEnviado, totalRecebido, extrato.size());
+    public List<Transacao> consultarNotificacoes(String numeroConta) {
+        consultarConta(numeroConta);
+        return transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(numeroConta, numeroConta);
     }
 }
