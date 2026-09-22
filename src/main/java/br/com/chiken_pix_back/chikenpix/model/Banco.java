@@ -97,4 +97,9 @@ public class Banco {
         return contas.findById(numeroConta)
                 .orElseThrow(() -> new IdNaoEncontradoException("Error: Conta não encontrada"));
     }
+
+    public List<Transacao> consultarNotificacoes(String numeroConta) {
+        consultarConta(numeroConta);
+        return transacoes.findByOrigem_NumeroContaOrDestino_NumeroContaOrderByDataHoraDesc(numeroConta, numeroConta);
+    }
 }
