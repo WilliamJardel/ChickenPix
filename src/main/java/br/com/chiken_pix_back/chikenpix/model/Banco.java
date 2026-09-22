@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import java.math.BigDecimal;
+
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCNPJ;
 import static br.com.chiken_pix_back.chikenpix.model.Usuario.validarCPF;
 
@@ -47,6 +49,13 @@ public class Banco {
         return chaves.findByChave(chave)
                 .map(ChavePix::getContaBancaria)
                 .orElse(null);
+    }
+
+    public void bloquearContaPorFraude(String numeroConta) {
+        ContaBancaria conta = contas.findById(numeroConta)
+                .orElseThrow(() -> new IdNaoEncontradoException("Conta bancária não encontrada."));
+        conta.bloquearPorSuspeitaDeFraude();
+        contas.save(conta);
     }
 
     public void removerUsuario(String id) {
@@ -125,6 +134,10 @@ public class Banco {
         return transacoes.findByDataHoraBetween(inicio, fim);
     }
 
+        BigDecimal totalEnviado = extrato.stream()
+                .filter(t -> t.getOrigem().getNumeroConta().equals(numeroConta))
+                .map(Transacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     public ContaBancaria consultarConta(String numeroConta) {
         return contas.findById(numeroConta)
